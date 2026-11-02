@@ -195,7 +195,7 @@ Requisitos: Docker Engine con Compose v2 y `openssl`.
 
 ```bash
 git clone <URL-del-repositorio>
-cd proyecto-integrador-backend
+cd ProyectoIntegrador
 
 # 1. Configuración local: los tres archivos son secretos y no se versionan
 cp .env.example .env
