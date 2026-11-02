@@ -105,13 +105,13 @@ Cada título indica su posición en el enunciado entre paréntesis.
 ### 01 — DevOps: Compose, redes, volúmenes y entorno _(doc 09)_
 **Entregable:** `docker-compose.yml` reproducible + plantillas de entorno + README de ejecución.
 **Hecho cuando:**
-- [ ] `docker compose up` levanta `auth`, `stego` y `db` sin pasos manuales.
-- [ ] Cada servicio arranca y se detiene por separado (T01).
-- [ ] `backend_net` interno, `edge_net` para los puertos publicados, `db` sin publicar.
-- [ ] Bases `auth` y `stego` con usuarios distintos y sin permisos cruzados.
-- [ ] `auth/.env.example` y `stego/.env.example` con todas las variables obligatorias y sin secretos.
-- [ ] `GET /health` responde en ambos servicios.
-- [ ] `README.md` con clonar → configurar → levantar.
+- [x] `docker compose up` levanta `auth`, `stego` y `db` sin pasos manuales.
+- [x] Cada servicio arranca y se detiene por separado (T01).
+- [x] `backend_net` interno, `edge_net` para los puertos publicados, `db` sin publicar.
+- [x] Bases `auth` y `stego` con usuarios distintos y sin permisos cruzados.
+- [x] `auth/.env.example` y `stego/.env.example` con todas las variables obligatorias y sin secretos.
+- [x] `GET /health` responde en ambos servicios.
+- [x] `README.md` con clonar → configurar → levantar.
 
 ### 02 — AUTH: capa de datos de identidad _(doc 01)_
 **Entregable:** proyecto AUTH con su `Dockerfile`, `.env.example` y migración aplicada.

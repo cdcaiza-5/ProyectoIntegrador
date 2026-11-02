@@ -25,7 +25,7 @@ extremo ni restricción de dispositivos.
 | Decisiones de alcance | ✅ [`docs/DECISIONES.md`](docs/DECISIONES.md) |
 | Documentación técnica (entregable aparte) | 📋 Índice y criterios en [`docs/DOCUMENTACION-TECNICA.md`](docs/DOCUMENTACION-TECNICA.md) |
 | Stack y convenciones | ✅ Definidos por el repositorio de referencia (abajo) |
-| Implementación | ⛔ **No iniciada** — pendiente de cerrar las desviaciones de §5 |
+| Implementación | 🚧 En curso — actividad **01** (esqueleto ejecutable) cerrada; sigue la **02** |
 
 ---
 
@@ -189,14 +189,54 @@ subsección de arriba.
 
 ---
 
-## Estructura prevista
+## Cómo ejecutar
+
+Requisitos: Docker Engine con Compose v2 y `openssl`.
+
+```bash
+git clone <repo> && cd ProyectoIntegrador
+
+# 1. Configuración local: los tres archivos son secretos y no se versionan
+cp .env.example .env
+cp auth/.env.example auth/.env
+cp stego/.env.example stego/.env
+
+# 2. Claves del JWT de desarrollo (van a .secrets/, ignorado por git)
+./scripts/gen-dev-keys.sh
+
+# 3. Comprueba que las contraseñas de base coinciden
+./scripts/check-env.sh
+
+# 4. Levanta los tres servicios
+docker compose up -d --build
+```
+
+| URL | Qué |
+|---|---|
+| `http://localhost:8080/health` | AUTH |
+| `http://localhost:8081/health` | STEGO |
+| `docker compose exec db psql -U auth_app -d auth` | base de AUTH (el puerto 5432 no se publica) |
+
+**Primer arranque.** `db/init/00-databases.sh` crea los roles `auth_app` y `stego_app`, las bases
+`auth` y `stego`, y aplica las dos migraciones. Cada rol queda como dueño de su base y sin `CONNECT`
+sobre la del otro. Esos scripts solo corren sobre un volumen vacío: para repetir el aprovisionamiento,
+`docker compose down -v`.
+
+**Operación.** `docker compose down` detiene sin borrar datos; `docker compose up -d auth` levanta un
+servicio con su base. Puertos, redes y variables son los del
+[contrato 7](docs/contratos/06-puertos-env-rutas.md).
+
+---
+
+## Estructura
 
 ```
 .
-├── auth/                     # microservicio AUTH  (app/ con la estructura del curso)
-├── stego/                    # microservicio STEGO
+├── auth/                     # AUTH: Dockerfile, .env.example, app/ (esqueleto de la 01)
+├── stego/                    # STEGO: Dockerfile, .env.example, app/ (esqueleto de la 01)
 ├── contracts/                # JSON Schema de los contratos entre servicios
 ├── db/
+│   ├── init/00-databases.sh  # roles, bases y migraciones del primer arranque
 │   ├── auth/001_init.sql
 │   └── stego/001_init.sql
 ├── docs/
@@ -204,18 +244,22 @@ subsección de arriba.
 │   └── DECISIONES.md         # alcance y decisiones
 ├── evidence/                 # salidas de pruebas (no se versiona lo crudo)
 ├── samples/                  # imágenes de prueba
-├── TAREAS.md
+├── scripts/                  # gen-dev-keys.sh · check-env.sh
+├── .env.example              # secretos de infraestructura para Compose
 ├── docker-compose.yml
+├── TAREAS.md
 └── README.md
 ```
+
+No se versionan: `.env`, `auth/.env`, `stego/.env`, `.secrets/`, `evidence/raw/` ni `samples/generated/`.
 
 ---
 
 ## Pendiente en este README
 
-- [ ] Instrucciones de clonar, configurar y levantar (ID 01 · doc 09)
-- [ ] Variables de entorno definitivas de cada servicio
-- [ ] Comandos de inicialización de la base
+- [x] Instrucciones de clonar, configurar y levantar (ID 01 · doc 09)
+- [x] Variables de entorno definitivas de cada servicio
+- [x] Comandos de inicialización de la base
 - [ ] Comandos de pruebas
 - [ ] Colección Postman/Insomnia (ID 10 · doc 10)
 

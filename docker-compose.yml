@@ -1,0 +1,113 @@
+# Contrato 7 — puertos, redes, volúmenes y variables.
+#
+# Antes de levantar:  cp .env.example .env
+#                     cp auth/.env.example auth/.env
+#                     cp stego/.env.example stego/.env
+#                     ./scripts/gen-dev-keys.sh
+#
+# Los tres .env son secretos locales y no se versionan.
+
+name: proyecto-integrador
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD:?define POSTGRES_SUPERUSER_PASSWORD en .env}
+      POSTGRES_DB: postgres
+      AUTH_DB_NAME: auth
+      AUTH_DB_USER: auth_app
+      AUTH_DB_PASSWORD: ${AUTH_DB_PASSWORD:?define AUTH_DB_PASSWORD en .env}
+      STEGO_DB_NAME: stego
+      STEGO_DB_USER: stego_app
+      STEGO_DB_PASSWORD: ${STEGO_DB_PASSWORD:?define STEGO_DB_PASSWORD en .env}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init/00-databases.sh:/docker-entrypoint-initdb.d/00-databases.sh:ro
+      - ./db/auth/001_init.sql:/docker-entrypoint-initdb.d/10-auth-schema.sql:ro
+      - ./db/stego/001_init.sql:/docker-entrypoint-initdb.d/20-stego-schema.sql:ro
+    # Sin `ports`: la base solo es alcanzable dentro de backend_net.
+    networks:
+      - backend_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  auth:
+    build:
+      context: ./auth
+    restart: unless-stopped
+    env_file:
+      - ./auth/.env
+    # La clave privada solo entra a AUTH; STEGO valida por JWKS.
+    secrets:
+      - jwt_private.pem
+      - jwt_public.pem
+    ports:
+      - "8080:8080"
+    # backend_net para hablar con db y stego; edge_net para poder publicar el puerto
+    # (una red `internal: true` no enruta hacia el host).
+    networks:
+      - backend_net
+      - edge_net
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.environ['AUTH_HTTP_PORT'] + '/health', timeout=3)"
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+
+  stego:
+    build:
+      context: ./stego
+    restart: unless-stopped
+    env_file:
+      - ./stego/.env
+    ports:
+      - "8081:8081"
+    volumes:
+      - stego_storage:/var/stego
+    networks:
+      - backend_net
+      - edge_net
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.environ['STEGO_HTTP_PORT'] + '/health', timeout=3)"
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+
+volumes:
+  db_data:
+  stego_storage:
+
+networks:
+  backend_net:
+    internal: true
+  edge_net:
+  # db no se conecta a edge_net: no se publica y no sale a internet.
+
+secrets:
+  jwt_private.pem:
+    file: ./.secrets/jwt_private.pem
+  jwt_public.pem:
+    file: ./.secrets/jwt_public.pem
