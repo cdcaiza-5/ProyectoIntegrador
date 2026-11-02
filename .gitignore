@@ -1,0 +1,26 @@
+# Secretos y configuración local
+.env
+.env.*
+!.env.example
+.secrets/
+
+# Artefactos de pruebas y evidencias crudas
+evidence/raw/
+samples/generated/
+*.log
+
+# Dependencias y builds
+node_modules/
+dist/
+build/
+target/
+bin/
+obj/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Entorno
+.DS_Store
+.idea/
