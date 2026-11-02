@@ -110,6 +110,7 @@ Cada título indica su posición en el enunciado entre paréntesis.
 - [ ] Roles `ADMIN`, `ANALYST`, `USER` sembrados.
 - [ ] Repositorios de usuarios, roles y asignaciones (sin arreglos en memoria ni constantes).
 - [ ] Asignación duplicada devuelve `409 ASSIGNMENT_EXISTS` y no crea fila (T06).
+- [ ] `python -m app.cli bootstrap-admin` crea el primer ADMIN, es idempotente y no deja la contraseña en `argv`, `.env` ni logs.
 
 ### 03 — STEGO: esqueleto, intake y validación _(doc 05)_
 **Entregable:** proyecto STEGO con `POST /api/v1/steganography/analyze` validando de verdad.

@@ -96,6 +96,13 @@ archivos e imágenes, resultados y registros.
 Para cada fila: activo · amenaza · vulnerabilidad · riesgo · control implementado · **a qué enfoque
 responde**.
 
+Fila adicional que no está en el Anexo E y conviene incluir, porque cubre el único momento en que el
+sistema no tiene controles:
+
+| Activo | Amenaza | Vulnerabilidad | Control | Enfoque |
+|---|---|---|---|---|
+| Identidades privilegiadas | Toma de control por la credencial inicial | Credencial por defecto o endpoint de instalación expuesto | Bootstrap CLI de un solo uso, sin red, sin secreto en reposo y auditado (contrato 5, §5) | Shift Left + Secure by Design |
+
 Y la vinculación explícita con:
 
 - **Zero Trust** (§2.4: ningún servicio confía en el otro sin verificar, decisión por operación)

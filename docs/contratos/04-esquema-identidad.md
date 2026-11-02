@@ -1,6 +1,8 @@
 # Contrato 5 — Esquema de base de datos de identidad (AUTH)
 
-**Estado:** CONGELADO v1.0.0 · **Motor:** PostgreSQL 16 · **Esquema:** `auth`
+**Estado:** CONGELADO v1.4.0 · **Motor:** PostgreSQL 16 · **Esquema:** `auth`
+
+**Cambios v1.4.0:** se define el procedimiento de bootstrap del primer administrador (§5).
 **Script ejecutable:** [`db/auth/001_init.sql`](../../db/auth/001_init.sql)
 
 Esta base de datos pertenece **exclusivamente** a AUTH. STEGO no tiene credenciales, conexión ni
@@ -84,8 +86,46 @@ roles `ADMIN`, `ANALYST`, `USER` sin duplicarlos si se ejecuta dos veces.
 - No se guardan contraseñas en claro, cifradas de forma reversible, ni hashes en logs.
 - No se crea ninguna tabla de identidad (ni copia de `users`) en la base de datos de STEGO.
 - STEGO no recibe credenciales de esta base de datos en ningún `.env`.
-- No se siembra ningún usuario con contraseña por defecto; si se usa un usuario semilla para la demo,
-  su contraseña vive en `.env` local y se cambia antes de la sustentación.
+- No se siembra ningún usuario con contraseña por defecto ni versionada.
+- No se crea el primer administrador desde un endpoint HTTP.
+
+---
+
+## 5. Bootstrap del primer administrador
+
+Es el único momento en que el sistema no puede verificar quién actúa, así que el mecanismo debe
+cumplir cuatro propiedades: **no alcanzable por red**, **de un solo uso**, **sin secreto en reposo** y
+**auditable**.
+
+### Procedimiento
+
+```bash
+docker compose exec auth python -m app.cli bootstrap-admin
+```
+
+| Paso | Comportamiento |
+|---|---|
+| 1 | Consulta si existe algún usuario con rol `ADMIN` **activo**. Si existe, termina con error sin crear nada |
+| 2 | Solicita `username` y `password` por terminal, con la entrada oculta (`getpass`) |
+| 3 | Valida política mínima: 12 caracteres como mínimo y ausencia en la lista de contraseñas comunes |
+| 4 | Calcula el hash con Argon2id |
+| 5 | En una sola transacción inserta el usuario, crea la asignación con `role_id` de `ADMIN` y `status='active'`, y deja `assigned_by` en `NULL` (origen: bootstrap) |
+| 6 | Registra la auditoría `bootstrap_admin_created` con `user_id` y marca de tiempo. Nunca la contraseña |
+
+### Reglas
+
+- El guard mira **rol ADMIN activo**, no «¿hay usuarios?». Un sistema puede tener usuarios y ningún
+  administrador, y en ese caso el bootstrap debe poder volver a correr.
+- La contraseña nunca se pasa por `argv`. Para automatizar se admite `--password-stdin`; el flag
+  `--password` no debe existir.
+- Orden de arranque: migraciones → bootstrap → servicio disponible para clientes.
+- La contraseña de demostración es desechable y el entorno se destruye al terminar la sustentación.
+
+### Prohibiciones
+
+- Credenciales por defecto de cualquier tipo.
+- Endpoint de instalación o «primer arranque» accesible por HTTP.
+- Contraseña del administrador inicial en `docker-compose.yml`, en `.env` versionado o en la auditoría.
 
 ---
 
@@ -97,6 +137,8 @@ roles `ADMIN`, `ANALYST`, `USER` sin duplicarlos si se ejecuta dos veces.
 - [ ] `SELECT count(*) FROM auth.user_roles WHERE user_id = $1 AND role_id = $2` siempre ≤ 1.
 - [ ] El script se aplica dos veces seguidas sin error ni filas duplicadas.
 - [ ] Un usuario con `status = 'inactive'` no obtiene `allowed:true` en ninguna acción.
+- [ ] El bootstrap crea un ADMIN cuando no existe ninguno y falla si ya existe uno activo.
+- [ ] El bootstrap no deja la contraseña en `argv`, en `.env` ni en los logs.
 - [ ] Desactivar una asignación (`status='inactive'`) cambia la decisión a `allowed:false` en la
       siguiente petición, con el mismo JWT aún vigente (T07, segunda vía).
 - [ ] Borrar la asignación (`DELETE`) produce el mismo efecto observable (T07, primera vía).

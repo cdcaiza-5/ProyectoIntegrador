@@ -100,13 +100,18 @@ silencio: cada una necesita aprobación de los dueños de AUTH y STEGO, y sube l
 | # | Referencia | Contrato actual | Recomendación | Motivo |
 |---|---|---|---|---|
 | a | Prefijo `/api/v1` (`API_V1_STR`) | sin prefijo de versión | **Adoptar `/api/v1`** | El enunciado lo acepta si se documenta; ambos servicios del curso lo usan. El endpoint interno queda como `/internal/authorization/check` (textual del enunciado) |
-| b | `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` + `.env.example` | `AUTH_DATABASE_URL` / `STEGO_DATABASE_URL` + `.env.example` | **Adoptar `DB_*`** y `.env.example` | Mismo estilo que el curso; `DATABASE_URL` se arma como propiedad en `Settings` |
+| b | `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` + `example.env.dist` | `AUTH_DATABASE_URL` / `STEGO_DATABASE_URL` + `.env.example` | **Adoptar `DB_*`**; la plantilla se decidió aparte (ver nota) | Mismo estilo que el curso; `DATABASE_URL` se arma como propiedad en `Settings` |
 | c | Paginación `?page=` + `?limit=` (1–100) | `?page_size=` | **Adoptar `limit`** | Consistencia con la guía de endpoints del curso |
 | d | JSON en camelCase en algunas respuestas (`accessToken`, `expiresIn`) | `snake_case` en todo | **Mantener `snake_case`** | El contrato 2 y los JSON Schema ya están normalizados; mezclar estilos rompería la validación. El JWT mantiene los claims estándar de RFC 7519 en camelCase nativo |
 
 **Resuelto el 2026-11-02:** se adoptan **a, b y c**; se mantiene **d** (`snake_case`) para no invalidar
 los esquemas de `contracts/`. El contrato 7 pasó a `1.1.0` y el índice a `1.1.0`; los endpoints de los
 contratos 2, 3 y 5 se actualizaron con el prefijo `/api/v1`.
+
+> **Nota sobre la fila b.** El nombre de la plantilla de entorno se resolvió en dos pasos. Primero se
+> adoptó `example.env.dist`, siguiendo la convención del curso. Después se revirtió a **`.env.example`**
+> en los contratos **v1.3.0**, porque es el nombre que el enunciado exige literalmente (§3). Las dos
+> columnas de esa fila reflejan el estado anterior a esa corrección.
 
 ---
 
@@ -210,6 +215,54 @@ a 5, logout a `204`, login con `identifier` y verificación contra hash ficticio
 - PK compuesta en `user_roles`: el Anexo A exige `id (PK)` + `UNIQUE(user_id, role_id)`.
 - Campos de usuario adicionales (cédula, nombres, apellidos, fecha de nacimiento, teléfono): el
   enunciado pide la estructura mínima y esos son datos personales que no necesitamos.
+
+---
+
+## D-008 · Bootstrap del primer administrador — RESUELTO
+
+**Problema:** para crear usuarios hay que ser ADMIN; para ser ADMIN hay que existir como usuario. El
+enunciado no menciona el tema en ningún lado, y sin resolverlo la demostración no puede empezar.
+
+**Decisión:** provisionador **CLI idempotente** dentro del contenedor, nunca un endpoint HTTP.
+
+```bash
+docker compose exec auth python -m app.cli bootstrap-admin
+```
+
+Especificación completa en el contrato 5, §5.
+
+### Las cuatro propiedades que lo hacen correcto
+
+| Propiedad | Cómo se cumple |
+|---|---|
+| No alcanzable por red | Vive en el contenedor y se ejecuta por `docker exec` sobre la red interna. No hay ruta HTTP |
+| De un solo uso | El guard exige que no exista un ADMIN **activo**; después de la primera ejecución queda inerte |
+| Sin secreto en reposo | La contraseña se pide por terminal con entrada oculta; nunca toca `.env`, Compose ni los logs |
+| Auditable | Registra `bootstrap_admin_created` con `user_id` y marca de tiempo, jamás la contraseña |
+
+### Alternativas descartadas
+
+| Opción | Por qué no |
+|---|---|
+| Contraseña por variable de entorno | Queda en `.env` indefinidamente, se ve en `docker inspect` y en `/proc/<pid>/environ` |
+| Endpoint `/setup` público | Condición de carrera: quien llegue primero gana. Deja superficie permanente dependiente de un guard |
+| Credenciales por defecto | La causa más común de toma de control en sistemas reales |
+| `INSERT` directo en SQL | Salta el hashing, no deja auditoría y exige calcular el hash a mano |
+| Script de semilla versionado | Peor que la variable de entorno: la credencial queda en el historial de git |
+
+### Detalles operativos
+
+- `--password-stdin` existe para automatizar; `--password` **no** debe existir, porque la contraseña
+  quedaría en el historial del shell y en `ps`.
+- Orden de arranque: migraciones → bootstrap → servicio disponible.
+- El guard mira **rol ADMIN activo**, no la existencia de usuarios.
+- Para la sustentación se usa una contraseña desechable y se destruye el entorno al terminar.
+
+### Impacto
+
+- Contrato 5, §5 y su lista de aceptación.
+- Actividad **02** (AUTH — datos), no como tarea aparte.
+- Fila propia en la matriz de riesgos del documento técnico.
 
 ---
 
