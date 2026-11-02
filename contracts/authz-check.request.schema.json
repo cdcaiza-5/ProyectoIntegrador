@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://backend-v1.local/contracts/authz-check.request.schema.json",
+  "title": "AuthorizationCheckRequest",
+  "description": "Cuerpo de POST /internal/authorization/check (contrato 2 v1.0.0). Una accion fuera del catalogo congelado en docs/contratos/03-matriz-permisos.md NO es un error de validacion: AUTH responde 200 con allowed=false y reason=unknown_action.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["subject_token", "action", "resource_id"],
+  "properties": {
+    "subject_token": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 4096,
+      "description": "JWT del usuario tal como llego, sin el prefijo 'Bearer '."
+    },
+    "action": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 64,
+      "examples": [
+        "auth.profile.read",
+        "auth.logout",
+        "users.create",
+        "users.list",
+        "users.update",
+        "roles.create",
+        "roles.list",
+        "roles.update",
+        "user_roles.create",
+        "user_roles.delete",
+        "steganography.analyze",
+        "steganography.results.read"
+      ]
+    },
+    "resource_id": {
+      "description": "Identificador del recurso sobre el que se opera; null cuando no aplica.",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        }
+      ]
+    }
+  }
+}

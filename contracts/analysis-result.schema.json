@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://backend-v1.local/contracts/analysis-result.schema.json",
+  "title": "AnalysisResult",
+  "description": "Resultado de un analisis de esteganografia (contrato 6 v1.0.0). Lo devuelve POST /api/steganography/analyze (201) y GET /api/steganography/results/:id (200), y corresponde a una fila de stego.analyses. Un resultado 'sospechosos' es un indicio, no prueba de esteganografia.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "analysis_id",
+    "user_id",
+    "filename",
+    "content_type",
+    "size_bytes",
+    "sha256",
+    "technique",
+    "status",
+    "indicators",
+    "action",
+    "limitations",
+    "created_at"
+  ],
+  "properties": {
+    "analysis_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "user_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "sub del solicitante; nunca lo envia el cliente."
+    },
+    "filename": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "Nombre original saneado: sin rutas ni caracteres de control."
+    },
+    "content_type": {
+      "type": "string",
+      "enum": ["image/png", "image/bmp"]
+    },
+    "size_bytes": { "type": "integer", "minimum": 1 },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "technique": { "type": "string", "const": "lsb_statistical_analysis" },
+    "status": {
+      "type": "string",
+      "enum": ["sin_indicios", "sospechosos", "no_concluyentes", "error"]
+    },
+    "indicators": {
+      "type": "object",
+      "required": ["anomaly_score", "threshold"],
+      "properties": {
+        "anomaly_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "threshold": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": { "type": "number" }
+    },
+    "action": {
+      "type": "string",
+      "enum": ["ninguna", "advertencia", "cuarentena", "rechazo"]
+    },
+    "limitations": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Obligatorio y nunca vacio: el resultado es indicativo, no concluyente."
+    },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

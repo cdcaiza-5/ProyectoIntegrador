@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://backend-v1.local/contracts/authz-check.response.schema.json",
+  "title": "AuthorizationCheckResponse",
+  "description": "Respuesta 200 de POST /internal/authorization/check (contrato 2 v1.0.0). allowed=false con HTTP 200 es una decision valida, no un error. La decision no se cachea ni se reutiliza.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_id",
+    "subject_id",
+    "action",
+    "resource_id",
+    "allowed",
+    "reason",
+    "roles",
+    "decided_at",
+    "decision_ttl_seconds"
+  ],
+  "properties": {
+    "decision_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "subject_id": {
+      "description": "sub del token; null si el token no es valido.",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        }
+      ]
+    },
+    "action": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 64
+    },
+    "resource_id": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        }
+      ]
+    },
+    "allowed": {
+      "type": "boolean"
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "active_role_grants_permission",
+        "no_active_role_for_action",
+        "user_inactive",
+        "role_inactive",
+        "assignment_missing",
+        "assignment_inactive",
+        "unknown_action",
+        "token_invalid",
+        "token_expired",
+        "subject_not_found"
+      ]
+    },
+    "roles": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "ADMIN",
+          "ANALYST",
+          "USER"
+        ]
+      }
+    },
+    "decided_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "decision_ttl_seconds": {
+      "type": "integer",
+      "const": 30
+    }
+  }
+}
