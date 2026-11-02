@@ -1,6 +1,6 @@
 # Contratos congelados — Backend V1 (AUTH + STEGO)
 
-**Versión:** 1.4.0
+**Versión:** 1.5.0
 **Estado:** CONGELADO
 **Fecha de congelamiento:** 2026-11-02
 **Entrega del proyecto:** 2026-11-04
@@ -67,6 +67,7 @@ servicios más documentación.
 |---|---|---|---|---|
 | 1.0.0 | 2026-11-02 | Congelamiento inicial | | |
 | 1.1.0 | 2026-11-02 | Adopción de las convenciones del repositorio de referencia del curso (contrato 7): `/api/v1`, `DB_*`, `.env.example`, paginación con `limit` | | |
+| 1.5.0 | 2026-11-02 | Variables del servicio `db` en el contrato 7: `POSTGRES_SUPERUSER_PASSWORD`, `AUTH_DB_PASSWORD`, `STEGO_DB_PASSWORD` y las fijas. La implementación ya las usaba y el contrato no las nombraba | | |
 | 1.4.0 | 2026-11-02 | Procedimiento de bootstrap del primer administrador (contrato 5): CLI idempotente, sin red, sin secreto en reposo y auditado | | |
 | 1.3.0 | 2026-11-02 | La plantilla de entorno vuelve a `.env.example`, nombre exigido por el enunciado (§3) | | |
 | 1.2.0 | 2026-11-02 | `status` en `user_roles` para desactivar asignaciones sin borrarlas (contrato 5); acción `user_roles.update` y endpoint `PATCH /api/v1/user-roles/:id` (contrato 4); `reason: assignment_inactive` (contrato 2); login con `identifier` y verificación contra hash ficticio (contrato 1); logout `204`, rate limit 5/60 s y validación de `X-Request-Id` (contratos 4 y 7) | | |
@@ -86,11 +87,11 @@ servicios más documentación.
 ## 5. Verificación del congelamiento (esto debe pasar antes de la demostración)
 
 - [ ] Los tres JSON Schema validan los ejemplos reales generados por ambos servicios.
-- [ ] Una instancia limpia levanta con `docker compose up` usando solo los nombres de `06-puertos-env-rutas.md`.
+- [x] Una instancia limpia levanta con `docker compose up` usando solo los nombres de `06-puertos-env-rutas.md`.
 - [ ] AUTH responde `/.well-known/jwks.json` y STEGO rechaza un token firmado con otra clave.
 - [ ] `POST /internal/authorization/check` devuelve exactamente los campos del contrato (sin extras).
 - [ ] La matriz de `03-matriz-permisos.md` coincide con lo implementado en los dos servicios.
-- [ ] `db/auth/001_init.sql` y `db/stego/001_init.sql` se aplican sin errores en una base vacía.
+- [x] `db/auth/001_init.sql` y `db/stego/001_init.sql` se aplican sin errores en una base vacía.
 - [ ] Un análisis real produce un JSON que valida contra `analysis-result.schema.json`.
 - [ ] Ningún servicio escribe en el esquema del otro.
 

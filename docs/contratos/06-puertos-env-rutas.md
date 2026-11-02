@@ -1,6 +1,10 @@
 # Contrato 7 — Puertos, variables de entorno, rutas y convenciones
 
-**Estado:** CONGELADO v1.3.0 · **Dueño:** DevOps / integración
+**Estado:** CONGELADO v1.5.0 · **Dueño:** DevOps / integración
+
+**Cambios v1.5.0:** se nombran las variables del servicio `db` (§4). `docker-compose.yml` ya las
+necesitaba y solo dos aparecían de pasada en el texto; la regla de este contrato es que todo nombre
+usado por la infraestructura figure aquí.
 
 **Cambios v1.3.0:** la plantilla de entorno pasa a llamarse `.env.example`, que es el nombre que exige el enunciado (§3).
 
@@ -152,6 +156,27 @@ services:
 Las credenciales que **crea** el contenedor de PostgreSQL viven en un `.env` raíz distinto, usado solo
 para la interpolación de Compose (`AUTH_DB_PASSWORD`, `STEGO_DB_PASSWORD`) y para el script de
 `docker-entrypoint-initdb.d` que crea ambas bases. Ese archivo nunca se monta dentro de los servicios.
+
+#### Variables del servicio `db` (infraestructura)
+
+PostgreSQL no es un microservicio (enunciado §2.1), pero necesita sus propias variables. Viven en el
+`.env` raíz y su plantilla es `.env.example`, una tercera plantilla que **no** es "de aplicación": las
+que exige el enunciado (§3) son `auth/.env.example` y `stego/.env.example`.
+
+| Variable (`.env` raíz) | En el contenedor | Nota |
+|---|---|---|
+| `POSTGRES_SUPERUSER_PASSWORD` | `POSTGRES_PASSWORD` | Obligatoria: Compose falla con un mensaje explícito si falta |
+| `AUTH_DB_PASSWORD` | `AUTH_DB_PASSWORD` | Debe coincidir con `DB_PASSWORD` de `auth/.env` |
+| `STEGO_DB_PASSWORD` | `STEGO_DB_PASSWORD` | Debe coincidir con `DB_PASSWORD` de `stego/.env` |
+
+| Variable fija | Valor | Nota |
+|---|---|---|
+| `POSTGRES_USER` · `POSTGRES_DB` | `postgres` | No se parametrizan |
+| `AUTH_DB_NAME` · `AUTH_DB_USER` | `auth` · `auth_app` | Los de §1 |
+| `STEGO_DB_NAME` · `STEGO_DB_USER` | `stego` · `stego_app` | Los de §1 |
+
+Las dos contraseñas de aplicación se comprueban antes de levantar: si la del `.env` raíz y la del
+`.env` del servicio divergen, el servicio arranca y falla al conectar.
 
 ### Envoltorio de error (único en ambos servicios)
 
