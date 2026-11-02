@@ -212,11 +212,11 @@ subsección de arriba.
 
 ## Pendiente en este README
 
-- [ ] Instrucciones de clonar, configurar y levantar (ID 09 · orden 1)
+- [ ] Instrucciones de clonar, configurar y levantar (ID 01 · doc 09)
 - [ ] Variables de entorno definitivas de cada servicio
 - [ ] Comandos de inicialización de la base
 - [ ] Comandos de pruebas
-- [ ] Colección Postman/Insomnia (ID 10 · orden 10)
+- [ ] Colección Postman/Insomnia (ID 10 · doc 10)
 
 ---
 

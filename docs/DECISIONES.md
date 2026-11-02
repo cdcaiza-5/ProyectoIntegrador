@@ -176,5 +176,5 @@ a 5, logout a `204`, login con `identifier` y verificación contra hash ficticio
 
 | ID | Pregunta | Bloquea a |
 |---|---|---|
-| D-006 | ¿Clave asimétrica RS256 del contrato 1, o se veta por ES256? | 02, 07 |
-| D-007 | ¿mTLS, o el token de servicio ya congelado en el contrato 3? | 04, 07 |
+| D-006 | ¿Clave asimétrica RS256 del contrato 1, o se veta por ES256? | 04, 07 |
+| D-007 | ¿mTLS, o el token de servicio ya congelado en el contrato 3? | 06, 07 |
