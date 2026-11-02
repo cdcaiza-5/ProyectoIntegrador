@@ -51,17 +51,29 @@ ID 03  ←→  Doc 05   STEGO — intake
 |---|---|---|
 | **A** | 01 | Ya |
 | **B** | 02, 03 | En paralelo con A |
-| **C** | 04, 05 | Cuando 02 cierre |
-| **D** | 06, 07 | Cuando 04 y 05 cierren |
-| **E** | 08, 09 | 08 desde que 03 cierre; 09 desde 03 y 04 |
-| **F** | 10, 12, 13 | Cuando 07 y 08 cierren |
+| **C** | 04, 05 | 04 cuando 02 cierre · 05 cuando 04 cierre |
+| **D** | 06, 07 | 06 cuando 04 y 05 cierren · 07 cuando además cierre 03 |
+| **E** | 08, 09 | 08 desde que 03 cierre · 09 desde 03 y 04 |
+| **F** | 10, 12, 13 | 10 y 12 cuando 07 y 08 cierren (12 pide 09) · 13 cuando 12 cierre |
 | **G** | 11 | **Ya, en paralelo con todo** (no depende de código) |
 
 ### Camino crítico
 
 ```
-01 → 02 → 04 → 06 → 07 → 12 → 13
+02 → 04 → 05 → 06 → 07 → 12 → 13
 ```
+
+Son siete actividades con **holgura cero**, y cuatro son de AUTH: el largo del proyecto lo fija
+**AUTH**, no STEGO. `03` y `08` llevan tres unidades de holgura cada una. `05` entra en la cadena
+porque `06` depende de `04` **y** de `05`, no solo de `04`.
+
+**`01` no es un eslabón.** No depende de nada y nada depende de él: es un *prerrequisito de arnés*.
+`02` y `03` se pueden **escribir** en paralelo con él, pero no se pueden **probar** hasta que
+`docker compose up` funcione. Por eso va primero en el calendario y no en la cadena.
+
+**Techo de paralelismo: cuatro personas.** El ancho por oleada es 4 → 2 → 2 → 1 → 1 → 2 → 1:
+`06` y `07` se recorren solos e indivisos. Sumar gente no baja la entrega de siete unidades;
+habría que partir `06` o `07`.
 
 Si algo se retrasa, se recorta primero lo que **no** está en esta cadena: 10 y 11 se pueden cerrar con
 lo que exista, y 09 se limita a lo demostrable.
