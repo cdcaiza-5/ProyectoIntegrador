@@ -110,19 +110,60 @@ contratos 2, 3 y 5 se actualizaron con el prefijo `/api/v1`.
 
 ---
 
-## D-004 · Modelo ML del requisito opcional — CONTEXTO
+## D-004 · Modelo ML del requisito opcional — CONTEXTO CON SALVEDADES
 
 Nota informativa, no reabre D-001.
 
 El "modelo (no LLM)" del requisito opcional **ya existe** en la cuenta del docente:
-[`agcudco/cve-detector-semma`](https://github.com/agcudco/cve-detector-semma) — detector entrenado
-(transformers + torch + scikit-learn) para SQLi, XSS, command injection, path traversal y deserialización
-insegura en Python y JavaScript, con Accuracy 84,4 % / Precision 85,4 % / Recall 82,5 % / F1 83,9 %.
-Expone una API Flask y un `VulnerabilityModel.analyze_code(code, language)`.
+[`agcudco/cve-detector-semma`](https://github.com/agcudco/cve-detector-semma).
 
-Si el pipeline se retomara, el costo de "entrenar el modelo" desaparece: se reutiliza el checkpoint y el
-trabajo se reduce a integrar la inferencia en el pipeline. **Sigue PARKED** por decisión de alcance, no
-por falta de modelo.
+### Qué es
+
+| Elemento | Detalle |
+|---|---|
+| Tipo | Ensemble **no LLM**: CodeBERT (`microsoft/codebert-base`, embeddings de 768 dimensiones) + features de patrón + `IsolationForest`, ponderado 75 % patrones / 25 % semántica |
+| Lenguajes | Python y JavaScript |
+| Vulnerabilidades | SQLi, XSS, command injection, path traversal, deserialización insegura |
+| Entrenamiento | 50 000 muestras de CVEfixes; ~2-3 min en GPU; serializa un `.pkl` de ~15 MB |
+| Umbral | 0,57 |
+| Interfaces | `VulnerabilityModel.analyze_code(code, language)` y una API Flask (`POST /analyze`, `GET /health`) |
+| Componentes | `DataFlowAnalyzer`, `TypeInference`, `FalsePositiveFilter` |
+
+Encaja con el stack elegido: Python está entre los lenguajes soportados.
+
+### Las métricas publicadas no sostienen un gate bloqueante
+
+| Métrica | Valor |
+|---|---|
+| Accuracy | 84,4 % |
+| Precision | 85,4 % |
+| Recall | 82,5 % |
+| F1 | 83,9 % |
+| **Specificity** | **33,3 %** |
+
+Una especificidad de 33,3 % significa que **dos de cada tres muestras seguras se clasifican como
+vulnerables**. Con ese valor, un *precisión* de 85,4 % solo es aritméticamente posible si el conjunto de
+prueba está muy sesgado hacia casos vulnerables (del orden de 80 % vulnerables / 20 % seguros), lo que
+no representa código real, donde la mayoría es seguro.
+
+**Consecuencia:** en un pipeline de merge, el modelo inundaría de falsos positivos al equipo. Solo
+serviría como **señal advisory**, nunca como check obligatorio. Por vulnerabilidad, el F1 va de 86 %
+(SQLi, deserialización) a 50 % (path traversal).
+
+### Costos de integración reales
+
+- Arrastra `torch` + `transformers` + CodeBERT, con embeddings por línea: pesado y lento en CI sin GPU.
+- La API Flask del repo no muestra autenticación; exponerla requeriría añadirla.
+- Los modelos se cargan con `pickle`: la herramienta usa **deserialización insegura**, que es
+  precisamente una de las cinco vulnerabilidades que detecta. Habría que confiar en el origen del `.pkl`
+  o re-serializar.
+- Requiere fijar versión del modelo y registrar su hash para que un resultado sea reproducible.
+
+### Conclusión
+
+Si el pipeline se retoma, ya no hay que *entrenar* nada: se reutiliza el modelo. Pero el trabajo se
+traslada de "construir el modelo" a "validarlo sobre nuestro código y decidir si su especificidad
+justifica usarlo siquiera como advisory". **Sigue PARKED** por decisión de alcance.
 
 ---
 
