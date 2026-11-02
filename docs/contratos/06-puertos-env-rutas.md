@@ -1,13 +1,15 @@
 # Contrato 7 — Puertos, variables de entorno, rutas y convenciones
 
-**Estado:** CONGELADO v1.1.0 · **Dueño:** DevOps / integración
+**Estado:** CONGELADO v1.3.0 · **Dueño:** DevOps / integración
+
+**Cambios v1.3.0:** la plantilla de entorno pasa a llamarse `.env.example`, que es el nombre que exige el enunciado (§3).
 
 **Cambios v1.1.0:** se adoptan las convenciones del repositorio de referencia del curso
 ([`agcudco/product-service-fast-api`](https://github.com/agcudco/product-service-fast-api)):
-prefijo `/api/v1`, variables `DB_*`, plantilla `example.env.dist` y paginación con `limit`.
+prefijo `/api/v1`, variables `DB_*`, plantilla `.env.example` y paginación con `limit`.
 El JSON sigue en `snake_case` para no invalidar los esquemas de `contracts/`.
 
-Estos nombres son contrato: aparecen en `docker-compose.yml`, en los dos `example.env.dist` y en el
+Estos nombres son contrato: aparecen en `docker-compose.yml`, en los dos `.env.example` y en el
 README. Cambiar uno obliga a cambiar los tres y avisar a ambos servicios.
 
 ---
@@ -91,7 +93,7 @@ Nombres canónicos para documentación y diagramas: **AUTH** y **STEGO**.
 |---|---|---|
 | Claves JWT (fuera del repo) | `.secrets/jwt_private.pem`, `.secrets/jwt_public.pem` | Solo AUTH lee la privada |
 | Secretos local | `.env` (ignorado por git) | Compose |
-| Plantillas | `auth/example.env.dist`, `stego/example.env.dist` | Sin secretos reales |
+| Plantillas | `auth/.env.example`, `stego/.env.example` | Sin secretos reales |
 | Migraciones | `db/auth/001_init.sql`, `db/stego/001_init.sql` | Aprovisionamiento |
 | Cuarentena de archivos | `/var/stego/quarantine` (volumen `stego_storage`) | Solo STEGO |
 | Evidencias de pruebas | `evidence/` (capturas, salidas, colección Postman) | Equipo |
@@ -206,7 +208,7 @@ Nunca se devuelven stack traces, rutas de archivo internas, SQL ni trazas de lib
 
 - [ ] `docker compose up` arranca `auth`, `stego` y `db` sin pasos manuales extra.
 - [ ] Cada servicio puede detenerse y arrancar por separado sin afectar al otro (T01).
-- [ ] Ambos `example.env.dist` existen, no contienen secretos reales y cubren todas las variables obligatorias.
+- [ ] Ambos `.env.example` existen, no contienen secretos reales y cubren todas las variables obligatorias.
 - [ ] `GET http://localhost:8080/health` y `GET http://localhost:8081/health` responden `200`.
 - [ ] `db` no está accesible desde el host en el puerto 5432.
 - [ ] Ningún log ni respuesta contiene `password_hash`, claves, JWT completos ni cadenas de conexión.

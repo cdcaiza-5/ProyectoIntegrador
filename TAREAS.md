@@ -97,12 +97,12 @@ Cada título indica su posición en el enunciado entre paréntesis.
 - [ ] Cada servicio arranca y se detiene por separado (T01).
 - [ ] `backend_net` interno, `edge_net` para los puertos publicados, `db` sin publicar.
 - [ ] Bases `auth` y `stego` con usuarios distintos y sin permisos cruzados.
-- [ ] `auth/example.env.dist` y `stego/example.env.dist` con todas las variables obligatorias y sin secretos.
+- [ ] `auth/.env.example` y `stego/.env.example` con todas las variables obligatorias y sin secretos.
 - [ ] `GET /health` responde en ambos servicios.
 - [ ] `README.md` con clonar → configurar → levantar.
 
 ### 02 — AUTH: capa de datos de identidad _(doc 01)_
-**Entregable:** proyecto AUTH con su `Dockerfile`, `example.env.dist` y migración aplicada.
+**Entregable:** proyecto AUTH con su `Dockerfile`, `.env.example` y migración aplicada.
 **Hecho cuando:**
 - [ ] `db/auth/001_init.sql` corre sin errores en base vacía y es idempotente.
 - [ ] `users`, `roles`, `user_roles` con FK y `UNIQUE(user_id, role_id)`.

@@ -1,6 +1,6 @@
 # Contratos congelados — Backend V1 (AUTH + STEGO)
 
-**Versión:** 1.2.0
+**Versión:** 1.3.0
 **Estado:** CONGELADO
 **Fecha de congelamiento:** 2026-11-02
 **Entrega del proyecto:** 2026-11-04
@@ -66,7 +66,8 @@ servicios más documentación.
 | Versión | Fecha | Cambio | Aprobó AUTH | Aprobó STEGO |
 |---|---|---|---|---|
 | 1.0.0 | 2026-11-02 | Congelamiento inicial | | |
-| 1.1.0 | 2026-11-02 | Adopción de las convenciones del repositorio de referencia del curso (contrato 7): `/api/v1`, `DB_*`, `example.env.dist`, paginación con `limit` | | |
+| 1.1.0 | 2026-11-02 | Adopción de las convenciones del repositorio de referencia del curso (contrato 7): `/api/v1`, `DB_*`, `.env.example`, paginación con `limit` | | |
+| 1.3.0 | 2026-11-02 | La plantilla de entorno vuelve a `.env.example`, nombre exigido por el enunciado (§3) | | |
 | 1.2.0 | 2026-11-02 | `status` en `user_roles` para desactivar asignaciones sin borrarlas (contrato 5); acción `user_roles.update` y endpoint `PATCH /api/v1/user-roles/:id` (contrato 4); `reason: assignment_inactive` (contrato 2); login con `identifier` y verificación contra hash ficticio (contrato 1); logout `204`, rate limit 5/60 s y validación de `X-Request-Id` (contratos 4 y 7) | | |
 
 ---
@@ -101,7 +102,7 @@ servicios más documentación.
 | Dueño de AUTH | 01 → 04 → 03 → 02 | Aplicar `db/auth/001_init.sql` y montar login + JWT |
 | Dueño de STEGO | 01 → 05 → 03 → 02 | Esqueleto del servicio + validación de archivos (no necesita a AUTH para empezar) |
 | Integración | 02 → 01 → 06 | Token de servicio + `authorization/check` + fallo seguro |
-| DevOps | 06 → 04 → 05 | `docker-compose.yml`, redes, volúmenes, `example.env.dist` |
+| DevOps | 06 → 04 → 05 | `docker-compose.yml`, redes, volúmenes, `.env.example` |
 | Documentación / pruebas | 03 → 05 → 02 → 06 | Matriz de riesgos, diagramas y colección Postman con los casos T01–T12 |
 
 Regla de oro para el equipo: si algo no está en estos documentos, **no se inventa en el código**; se

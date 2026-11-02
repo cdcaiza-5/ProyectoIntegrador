@@ -100,7 +100,7 @@ silencio: cada una necesita aprobación de los dueños de AUTH y STEGO, y sube l
 | # | Referencia | Contrato actual | Recomendación | Motivo |
 |---|---|---|---|---|
 | a | Prefijo `/api/v1` (`API_V1_STR`) | sin prefijo de versión | **Adoptar `/api/v1`** | El enunciado lo acepta si se documenta; ambos servicios del curso lo usan. El endpoint interno queda como `/internal/authorization/check` (textual del enunciado) |
-| b | `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` + `example.env.dist` | `AUTH_DATABASE_URL` / `STEGO_DATABASE_URL` + `.env.example` | **Adoptar `DB_*`** y `example.env.dist` | Mismo estilo que el curso; `DATABASE_URL` se arma como propiedad en `Settings` |
+| b | `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` + `.env.example` | `AUTH_DATABASE_URL` / `STEGO_DATABASE_URL` + `.env.example` | **Adoptar `DB_*`** y `.env.example` | Mismo estilo que el curso; `DATABASE_URL` se arma como propiedad en `Settings` |
 | c | Paginación `?page=` + `?limit=` (1–100) | `?page_size=` | **Adoptar `limit`** | Consistencia con la guía de endpoints del curso |
 | d | JSON en camelCase en algunas respuestas (`accessToken`, `expiresIn`) | `snake_case` en todo | **Mantener `snake_case`** | El contrato 2 y los JSON Schema ya están normalizados; mezclar estilos rompería la validación. El JWT mantiene los claims estándar de RFC 7519 en camelCase nativo |
 

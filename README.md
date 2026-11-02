@@ -23,6 +23,7 @@ extremo ni restricción de dispositivos.
 | Contratos entre servicios | ✅ Congelados v1.0.0 — [`docs/contratos/`](docs/contratos/00-INDICE-Y-DECISIONES.md) |
 | Tablero de trabajo (13 actividades) | ✅ [`TAREAS.md`](TAREAS.md) · issues [#1–#13](../../issues) |
 | Decisiones de alcance | ✅ [`docs/DECISIONES.md`](docs/DECISIONES.md) |
+| Documentación técnica (entregable aparte) | 📋 Índice y criterios en [`docs/DOCUMENTACION-TECNICA.md`](docs/DOCUMENTACION-TECNICA.md) |
 | Stack y convenciones | ✅ Definidos por el repositorio de referencia (abajo) |
 | Implementación | ⛔ **No iniciada** — pendiente de cerrar las desviaciones de §5 |
 
@@ -80,7 +81,7 @@ adoptan porque es el mismo stack que usamos.
 | Cliente entre servicios | `app/clients/user_service.py` con `httpx.AsyncClient` en `app.state` |
 | Trazabilidad | Cabecera `X-Request-Id` propagada del servicio consumidor al de identidad |
 | Respuesta de salud | `GET /health` → `{"status": "ok", "service": "<nombre>"}` |
-| Plantilla de entorno | `example.env.dist` (no `example.env.dist`) |
+| Plantilla de entorno | `.env.example` (no `.env.example`) |
 | Modelos | UUID v4 como PK, `Mapped[...]`, `CheckConstraint` en `__table_args__` |
 | Eliminación lógica | Campo de fecha de eliminación en lugar de `DELETE` físico |
 | Paginación | `?page=` (≥1) y `?limit=` (1–100) |
@@ -113,7 +114,7 @@ formaliza como `POST /internal/authorization/check`.
 | `GuiaEndpoints.md` | Tabla de endpoints con ejemplos de petición y respuesta |
 | `TallerJWT.md` | Política RBAC por recurso/operación + integración con el servicio de identidad |
 | `docker-compose.product-db.yml` | PostgreSQL 16 con healthcheck, puerto 5433 en host |
-| `example.env.dist` | Plantilla de variables sin secretos reales |
+| `.env.example` | Plantilla de variables sin secretos reales |
 
 ### `ms-users-nestjs`
 
@@ -233,3 +234,8 @@ subsección de arriba.
 | [`docs/contratos/06-puertos-env-rutas.md`](docs/contratos/06-puertos-env-rutas.md) | Puertos, variables y convenciones |
 | [`TAREAS.md`](TAREAS.md) | Tablero de trabajo del equipo |
 | [`docs/DECISIONES.md`](docs/DECISIONES.md) | Alcance y decisiones abiertas |
+| [`docs/DOCUMENTACION-TECNICA.md`](docs/DOCUMENTACION-TECNICA.md) | Guía del documento técnico que se entrega aparte |
+
+> Los archivos Markdown de este repositorio son **guías de trabajo**. La documentación técnica que se
+> evalúa es un documento separado y su índice obligatorio está en
+> [`docs/DOCUMENTACION-TECNICA.md`](docs/DOCUMENTACION-TECNICA.md).

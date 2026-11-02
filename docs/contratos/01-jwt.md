@@ -104,7 +104,7 @@ bloquear el login.
 
 - La clave privada se inyecta en AUTH por secreto montado y se referencia con
   `AUTH_JWT_PRIVATE_KEY_PATH`. **No** se copia al repositorio ni a la imagen Docker en texto plano.
-- `example.env.dist` solo contiene la **ruta** a la clave, con un marcador de posición.
+- `.env.example` solo contiene la **ruta** a la clave, con un marcador de posición.
 - La clave pública se expone por JWKS en AUTH y STEGO la obtiene por HTTP en
   `STEGO_AUTH_JWKS_URL` (caché corta, con reintento y sin bloquear la operación si falla: **falla
   cerrado**).
