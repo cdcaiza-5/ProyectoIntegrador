@@ -194,7 +194,8 @@ subsección de arriba.
 Requisitos: Docker Engine con Compose v2 y `openssl`.
 
 ```bash
-git clone <repo> && cd ProyectoIntegrador
+git clone <URL-del-repositorio>
+cd proyecto-integrador-backend
 
 # 1. Configuración local: los tres archivos son secretos y no se versionan
 cp .env.example .env
@@ -242,8 +243,8 @@ servicio con su base. Puertos, redes y variables son los del
 ├── docs/
 │   ├── contratos/            # contratos congelados
 │   └── DECISIONES.md         # alcance y decisiones
-├── evidence/                 # salidas de pruebas (no se versiona lo crudo)
-├── samples/                  # imágenes de prueba
+├── evidence/                 # pendiente: salidas de pruebas (actividad 12)
+├── samples/                  # pendiente: imágenes de prueba (actividad 12)
 ├── scripts/                  # gen-dev-keys.sh · check-env.sh
 ├── .env.example              # secretos de infraestructura para Compose
 ├── docker-compose.yml
