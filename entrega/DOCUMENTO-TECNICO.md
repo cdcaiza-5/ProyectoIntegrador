@@ -82,7 +82,7 @@ están en curso. Para no atribuirnos trabajo no verificado, el estado se declara
 | Seguridad transversal (envoltorio de error, logs, límites) | `auth/app/errors.py`, `auth/app/ratelimit.py`, `stego/app/errors.py`, `stego/app/logging.py`, `stego/app/request_ids.py` | **Implementado en el repositorio**; logs depurados verificables en T12: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
 | Muestras de imagen (limpia, con carga, corrupta, falsa, enorme) | `samples/` + `stego/scripts/generate_samples.py` | **Presentes**, generadas por script versionado. Mediciones reales: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
 | Suite de pruebas | `tests/conftest.py`, `tests/test_auth.py`, `tests/test_stego.py` | **Presente**. Ejecución y salidas: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
-| Colección de solicitudes REST | `docs/coleccion-rest.postman_collection.json` | **Presente**; recorrido de punta a punta: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| Colección de solicitudes REST | `docs/coleccion-rest.postman_collection.json` | **Presente** (17 peticiones ordenadas). **No se ha ejecutado** con newman; su recorrido está declarado como pendiente en [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
 | OpenAPI exportado de ambos servicios | Procedimiento en §6.4 | **Pendiente · A10** (`/openapi.json` ya se genera en tiempo de ejecución por FastAPI) |
 | Evidencias T01–T12 | Procedimiento en §11 | **Pendiente · A12** |
 
@@ -1678,8 +1678,8 @@ reales**.
 
 | Marcador | Qué debe existir | Actividad |
 |---|---|---|
-| [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) | `contracts/openapi-auth.json` y `contracts/openapi-stego.json` exportados desde los servicios y verificados contra el comportamiento; recorrido completo de `docs/coleccion-rest.postman_collection.json` | 10 |
-| [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) | Salida de `pytest -q tests` con las 30 pruebas; evidencias de T01–T12 (comando y salida); medición de `sample-clean.*` frente a `sample-lsb.png` con sus indicadores reales; curva ROC y matriz de confusión de la calibración del umbral; logs depurados de T12 | 12 |
+| [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) | `contracts/openapi-auth.json` y `contracts/openapi-stego.json` exportados desde los servicios en ejecución (12 y 2 rutas). La colección Postman está escrita y versionada, **sin ejecutar** | 10 |
+| [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) | Salida de `pytest -q tests` con las 30 pruebas; evidencias de T01–T12 (comando y salida); medición de `sample-clean.*` frente a `sample-lsb.png` con sus indicadores reales; y los logs depurados de T12. **No** incluye curva ROC ni matriz de confusión: el umbral es el del contrato y no se calibró con un corpus | 12 |
 | `⟨PENDIENTE · A13⟩` | Ensayo cronometrado del guion de sustentación, sin errores, con planes B verificados | 13 |
 
 Los marcadores `⟨PENDIENTE · A02⟩`…`⟨PENDIENTE · A09⟩` que aparecían en la versión anterior de este
