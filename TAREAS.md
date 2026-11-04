@@ -196,7 +196,7 @@ Cada título indica su posición en el enunciado entre paréntesis.
 - [x] OpenAPI de AUTH con todos los endpoints, incluido el interno marcado como solo-servicio.
 - [x] OpenAPI de STEGO con analyze (multipart) y results.
 - [x] Colección con caminos felices y todos los casos de denegación.
-- [x] La colección se ejecuta de punta a punta contra el Compose levantado.
+- [ ] La colección se ejecuta de punta a punta contra el Compose levantado.
 
 ### 11 — Informe técnico y matriz de riesgos _(doc 11)_
 **Entregable:** documento con diagramas, justificaciones y matriz.
@@ -211,7 +211,7 @@ Cada título indica su posición en el enunciado entre paréntesis.
 ### 12 — Pruebas y evidencias _(doc 12)_
 **Entregable:** suite ejecutable + evidencias reproducibles de T01–T12.
 **Hecho cuando:**
-- [x] Unitarias: hashing, emisión/validación de token, decisión RBAC, analizador LSB.
+- [ ] Unitarias: hashing, emisión/validación de token, decisión RBAC, analizador LSB.
 - [x] Funcionales de cada endpoint, incluidos `401/403/413/415`.
 - [x] Seguridad: token manipulado, vencido, `alg:none`, revocación con JWT vivo, AUTH caído, archivo polyglot.
 - [x] Integración: usuario con 2 roles, rol en 2 usuarios, login → analyze → results.
