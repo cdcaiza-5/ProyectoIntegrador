@@ -1,7 +1,7 @@
  Container proyecto-integrador-db-1 Running 
  Container proyecto-integrador-db-1 Waiting 
  Container proyecto-integrador-db-1 Healthy 
- Container proyecto-integrador-auth-run-7c796e823c8d Creating 
- Container proyecto-integrador-auth-run-7c796e823c8d Created 
+ Container proyecto-integrador-auth-run-cc85b6308822 Creating 
+ Container proyecto-integrador-auth-run-cc85b6308822 Created 
 ..............................                                           [100%]
-30 passed in 5.53s
+30 passed in 4.85s
