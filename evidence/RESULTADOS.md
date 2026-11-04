@@ -19,16 +19,21 @@ Si el puerto 8080 del host está ocupado por otro proyecto, publica AUTH en 1808
 ## Suite
 
 ```
-$ docker compose run --rm -v "$PWD/tests:/tests:ro" -v "$PWD/samples:/samples:ro" \
-    -e AUTH_BASE_URL=http://auth:8080 -e STEGO_BASE_URL=http://stego:8081 \
-    auth python -m pytest /tests -q
+$ ./scripts/run-tests.sh
 
-..............................                                           [100%]
-30 passed in 4.61s
+30 passed in 5.93s          # funcional, seguridad e integración (HTTP real)
+8 passed, 4 skipped         # unidades de AUTH, en la imagen de AUTH
+4 passed, 8 skipped         # unidades de STEGO, en la imagen de STEGO
 ```
 
-Cubre: identidad y JWT, decisiones de autorización, los once pasos de validación, el detector LSB,
-propiedad de resultados, revocación, fallo cerrado y el envoltorio de error.
+La suite funcional cubre identidad y JWT, decisiones de autorización, los once pasos de validación,
+el detector LSB, propiedad de resultados, revocación, fallo cerrado y el envoltorio de error.
+
+Las de unidad cubren lo que no se puede probar por HTTP: Argon2id, emisión y validación del token
+(vencido, audiencia ajena, `alg: none`), que el token no lleve roles ni datos personales, la forma
+del JWKS sin material privado, la supervivencia chi-cuadrado, la separación limpia/cargada y que
+`limitations` nunca quede vacío. Cada imagen corre solo el bloque cuyo módulo contiene; el otro se
+salta (`4 skipped` / `8 skipped`).
 
 ## Escenarios mínimos del enunciado
 
@@ -72,8 +77,8 @@ ejecución de arriba abajo).
 
 ## Lo que **no** está cubierto
 
-- Nada: la colección se ejecutó con `newman` (17 peticiones, 17 aserciones, 0 fallos) y su salida
-  está en `evidence/newman.txt`.
+- La colección se ejecutó con `newman`: 17 peticiones, 17 aserciones, 0 fallos, repetible
+  (`evidence/newman.txt`).
 - No se midió una curva ROC del umbral; el valor `0.75` es el del contrato y está justificado en el
   documento técnico §7, no calibrado con un corpus real de imágenes.
 - Sin TLS: los puertos se publican en HTTP plano para la demostración.

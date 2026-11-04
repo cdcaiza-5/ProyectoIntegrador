@@ -211,7 +211,7 @@ Cada título indica su posición en el enunciado entre paréntesis.
 ### 12 — Pruebas y evidencias _(doc 12)_
 **Entregable:** suite ejecutable + evidencias reproducibles de T01–T12.
 **Hecho cuando:**
-- [ ] Unitarias: hashing, emisión/validación de token, decisión RBAC, analizador LSB.
+- [x] Unitarias: hashing, emisión/validación de token, decisión RBAC, analizador LSB.
 - [x] Funcionales de cada endpoint, incluidos `401/403/413/415`.
 - [x] Seguridad: token manipulado, vencido, `alg:none`, revocación con JWT vivo, AUTH caído, archivo polyglot.
 - [x] Integración: usuario con 2 roles, rol en 2 usuarios, login → analyze → results.

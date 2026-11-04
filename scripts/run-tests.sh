@@ -34,16 +34,22 @@ printf '%s\n' "$ADMIN_PASSWORD" |
 
 mkdir -p evidence
 
-echo "== 4/5 · suite funcional, de seguridad e integración"
+echo "== 4/6 · suite funcional, de seguridad e integración"
 $COMPOSE run --rm \
     -v "$PWD/tests:/tests:ro" \
     -v "$PWD/samples:/samples:ro" \
     -e AUTH_BASE_URL=http://auth:8080 \
     -e STEGO_BASE_URL=http://stego:8081 \
     -e TEST_ADMIN_PASSWORD="$ADMIN_PASSWORD" \
-    auth python -m pytest /tests -q -p no:cacheprovider 2>&1 | tee evidence/pytest.txt
+    auth python -m pytest /tests -q -p no:cacheprovider --ignore=/tests/test_units.py 2>&1 | tee evidence/pytest.txt
 
-echo "== 5/5 · T08 · AUTH inaccesible → 503 sin persistir"
+echo "== 5/6 · pruebas de unidad, una por imagen"
+$COMPOSE run --rm -v "$PWD/tests:/tests:ro" -e PYTHONPATH=/app auth \
+    python -m pytest /tests/test_units.py -q -p no:cacheprovider 2>&1 | tee evidence/pytest-unit-auth.txt
+$COMPOSE run --rm -v "$PWD/tests:/tests:ro" -e PYTHONPATH=/app stego \
+    python -m pytest /tests/test_units.py -q -p no:cacheprovider 2>&1 | tee evidence/pytest-unit-stego.txt
+
+echo "== 6/6 · T08 · AUTH inaccesible → 503 sin persistir"
 TOKEN=$(curl -s -X POST "$AUTH_PUBLIC_URL/api/v1/auth/login" \
     -H 'Content-Type: application/json' \
     -d "{\"identifier\":\"admin\",\"password\":\"$ADMIN_PASSWORD\"}" |

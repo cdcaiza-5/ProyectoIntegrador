@@ -1,0 +1,7 @@
+ Container proyecto-integrador-db-1 Running 
+ Container proyecto-integrador-db-1 Waiting 
+ Container proyecto-integrador-db-1 Healthy 
+ Container proyecto-integrador-auth-run-62258159450e Creating 
+ Container proyecto-integrador-auth-run-62258159450e Created 
+........ssss                                                             [100%]
+8 passed, 4 skipped in 1.53s

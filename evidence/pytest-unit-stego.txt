@@ -1,0 +1,7 @@
+ Container proyecto-integrador-db-1 Running 
+ Container proyecto-integrador-db-1 Waiting 
+ Container proyecto-integrador-db-1 Healthy 
+ Container proyecto-integrador-stego-run-57ba219d17ed Creating 
+ Container proyecto-integrador-stego-run-57ba219d17ed Created 
+ssssssss....                                                             [100%]
+4 passed, 8 skipped in 0.45s
