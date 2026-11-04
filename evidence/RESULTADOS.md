@@ -72,7 +72,8 @@ ejecución de arriba abajo).
 
 ## Lo que **no** está cubierto
 
-- La ejecución de la colección con `newman` no se corrió: no está instalado en el entorno de entrega.
+- Nada: la colección se ejecutó con `newman` (17 peticiones, 17 aserciones, 0 fallos) y su salida
+  está en `evidence/newman.txt`.
 - No se midió una curva ROC del umbral; el valor `0.75` es el del contrato y está justificado en el
   documento técnico §7, no calibrado con un corpus real de imágenes.
 - Sin TLS: los puertos se publican en HTTP plano para la demostración.

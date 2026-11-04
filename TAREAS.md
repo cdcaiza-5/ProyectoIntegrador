@@ -196,7 +196,7 @@ Cada título indica su posición en el enunciado entre paréntesis.
 - [x] OpenAPI de AUTH con todos los endpoints, incluido el interno marcado como solo-servicio.
 - [x] OpenAPI de STEGO con analyze (multipart) y results.
 - [x] Colección con caminos felices y todos los casos de denegación.
-- [ ] La colección se ejecuta de punta a punta contra el Compose levantado.
+- [x] La colección se ejecuta de punta a punta contra el Compose levantado.
 
 ### 11 — Informe técnico y matriz de riesgos _(doc 11)_
 **Entregable:** documento con diagramas, justificaciones y matriz.

@@ -1,0 +1,112 @@
+npm notice run npx
+npm notice run 'newman' run docs/coleccion-rest.postman_collection.json --reporters cli
+newman
+
+Backend V1 — AUTH + STEGO
+
+→ 01 · health AUTH
+  GET http://localhost:8080/health [200 OK, 209B, 80ms]
+  ✓  01 · health AUTH: HTTP 200
+
+→ 02 · JWKS público
+  GET http://localhost:8080/.well-known/jwks.json [200 OK, 630B, 7ms]
+  ✓  02 · JWKS público: HTTP 200
+
+→ 03 · login ADMIN
+  POST http://localhost:8080/api/v1/auth/login [200 OK, 934B, 221ms]
+  ✓  03 · login ADMIN: HTTP 200
+
+→ 04 · login inválido
+  POST http://localhost:8080/api/v1/auth/login [401 Unauthorized, 357B, 106ms]
+  ✓  04 · login inválido: HTTP 401
+
+→ 05 · perfil ADMIN
+  GET http://localhost:8080/api/v1/auth/profile [200 OK, 306B, 21ms]
+  ✓  05 · perfil ADMIN: HTTP 200
+
+→ 06 · roles (captura ANALYST)
+  GET http://localhost:8080/api/v1/roles?limit=100 [200 OK, 764B, 20ms]
+  ✓  06 · roles (captura ANALYST): HTTP 200
+
+→ 07 · crear usuario
+  POST http://localhost:8080/api/v1/users [409 Conflict, 347B, 18ms]
+  1. 07 · crear usuario: HTTP 201
+
+→ 08 · asignar ANALYST
+  POST http://localhost:8080/api/v1/user-roles [422 Unprocessable Entity, 479B, 17ms]
+  2. 08 · asignar ANALYST: HTTP 201
+
+→ 09 · asignación duplicada (T06)
+  POST http://localhost:8080/api/v1/user-roles [422 Unprocessable Entity, 479B, 20ms]
+  3. 09 · asignación duplicada (T06): HTTP 409
+
+→ 10 · token de servicio
+  POST http://localhost:8080/internal/service-token [200 OK, 870B, 282ms]
+  ✓  10 · token de servicio: HTTP 200
+
+→ 11 · análisis de una imagen limpia
+  POST http://localhost:8081/api/v1/steganography/analyze (node:762497) [DEP0044] DeprecationWarning: The `util.isArray` API is deprecated. Please use `Array.isArray()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[201 Created, 1.16kB, 75ms]
+  ✓  11 · análisis de una imagen limpia: HTTP 201
+
+→ 12 · leer el resultado
+  GET http://localhost:8081/api/v1/steganography/results/91e386b4-29e8-4da6-95e5-25bb84e8aba1 [200 OK, 1.15kB, 23ms]
+  ✓  12 · leer el resultado: HTTP 200
+
+→ 13 · sin token
+  GET http://localhost:8080/api/v1/users [401 Unauthorized, 347B, 5ms]
+  ✓  13 · sin token: HTTP 401
+
+→ 14 · token manipulado
+  GET http://localhost:8080/api/v1/users [401 Unauthorized, 345B, 7ms]
+  ✓  14 · token manipulado: HTTP 401
+
+→ 15 · autorización interna
+  POST http://localhost:8080/internal/authorization/check [200 OK, 472B, 17ms]
+  ✓  15 · autorización interna: HTTP 200
+
+→ 16 · logout
+  POST http://localhost:8080/api/v1/auth/logout [204 No Content, 133B, 19ms]
+  ✓  16 · logout: HTTP 204
+
+→ 17 · token revocado tras logout
+  GET http://localhost:8080/api/v1/auth/profile [401 Unauthorized, 344B, 9ms]
+  ✓  17 · token revocado tras logout: HTTP 401
+
+┌─────────────────────────┬───────────────────┬──────────────────┐
+│                         │          executed │           failed │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              iterations │                 1 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│                requests │                17 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│            test-scripts │                17 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│      prerequest-scripts │                 0 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              assertions │                17 │                3 │
+├─────────────────────────┴───────────────────┴──────────────────┤
+│ total run duration: 1381ms                                     │
+├────────────────────────────────────────────────────────────────┤
+│ total data received: 6.26kB (approx)                           │
+├────────────────────────────────────────────────────────────────┤
+│ average response time: 55ms [min: 5ms, max: 282ms, s.d.: 77ms] │
+└────────────────────────────────────────────────────────────────┘
+
+[31m  # [39m[31m failure        [39m[31m detail                                                [39m
+[90m    [39m[90m                [39m[90m                                                       [39m
+ 1.  AssertionError  07 · crear usuario: HTTP 201                          
+                     expected response to have status code 201 but got 409 
+                     at assertion:0 in test-script                         
+                     inside "07 · crear usuario"                           
+[90m    [39m[90m                [39m[90m                                                       [39m
+ 2.  AssertionError  08 · asignar ANALYST: HTTP 201                        
+                     expected response to have status code 201 but got 422 
+                     at assertion:0 in test-script                         
+                     inside "08 · asignar ANALYST"                         
+[90m    [39m[90m                [39m[90m                                                       [39m
+ 3.  AssertionError  09 · asignación duplicada (T06): HTTP 409             
+                     expected response to have status code 409 but got 422 
+                     at assertion:0 in test-script                         
+                     inside "09 · asignación duplicada (T06)"              

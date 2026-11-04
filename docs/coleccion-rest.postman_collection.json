@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Backend V1 — AUTH + STEGO",
-    "description": "Colección de referencia del contrato 4. Orden pensado para ejecutarse de arriba abajo.",
+    "description": "Colección del contrato 4, para ejecutarse de arriba abajo con `newman run docs/coleccion-rest.postman_collection.json` desde la raíz del repositorio (la petición 11 sube samples/sample-clean.png). T08 (AUTH caído) queda fuera: exige parar un contenedor a mitad del recorrido; su evidencia está en evidence/T08-auth-caido.txt.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -56,16 +56,7 @@
       "request": {
         "method": "GET",
         "header": [],
-        "url": {
-          "raw": "{{base_url}}/health",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "health"
-          ]
-        },
-        "description": "Público, sin datos sensibles."
+        "url": "{{base_url_auth}}/health"
       },
       "event": [
         {
@@ -73,7 +64,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('01 · health AUTH responde 200', () => pm.response.to.have.status(200));"
+              "pm.test('01 · health AUTH: HTTP 200', () => pm.response.to.have.status(200));"
             ]
           }
         }
@@ -84,17 +75,7 @@
       "request": {
         "method": "GET",
         "header": [],
-        "url": {
-          "raw": "{{base_url}}/.well-known/jwks.json",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            ".well-known",
-            "jwks.json"
-          ]
-        },
-        "description": "Solo material público; la privada nunca sale de AUTH."
+        "url": "{{base_url_auth}}/.well-known/jwks.json"
       },
       "event": [
         {
@@ -102,7 +83,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('02 · JWKS público responde 200', () => pm.response.to.have.status(200));"
+              "pm.test('02 · JWKS público: HTTP 200', () => pm.response.to.have.status(200));"
             ]
           }
         }
@@ -118,19 +99,7 @@
             "value": "application/json"
           }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/v1/auth/login",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "auth",
-            "login"
-          ]
-        },
-        "description": "",
+        "url": "{{base_url_auth}}/api/v1/auth/login",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"identifier\": \"{{admin_identifier}}\",\n  \"password\": \"{{admin_password}}\"\n}",
@@ -147,8 +116,8 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('03 · login ADMIN responde 200', () => pm.response.to.have.status(200));",
-              "pm.collectionVariables.set('token', pm.response.json().access_token);"
+              "pm.test('03 · login ADMIN: HTTP 200', () => pm.response.to.have.status(200));",
+              "const b = pm.response.json(); pm.collectionVariables.set('token', b.access_token);"
             ]
           }
         }
@@ -164,19 +133,7 @@
             "value": "application/json"
           }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/v1/auth/login",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "auth",
-            "login"
-          ]
-        },
-        "description": "",
+        "url": "{{base_url_auth}}/api/v1/auth/login",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"identifier\": \"{{admin_identifier}}\",\n  \"password\": \"clave-incorrecta\"\n}",
@@ -193,7 +150,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('04 · login inválido responde 401', () => pm.response.to.have.status(401));"
+              "pm.test('04 · login inválido: HTTP 401', () => pm.response.to.have.status(401));"
             ]
           }
         }
@@ -209,19 +166,7 @@
             "value": "Bearer {{token}}"
           }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/v1/auth/profile",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "auth",
-            "profile"
-          ]
-        },
-        "description": ""
+        "url": "{{base_url_auth}}/api/v1/auth/profile"
       },
       "event": [
         {
@@ -229,7 +174,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('05 · perfil ADMIN responde 200', () => pm.response.to.have.status(200));"
+              "pm.test('05 · perfil ADMIN: HTTP 200', () => pm.response.to.have.status(200));"
             ]
           }
         }
@@ -245,18 +190,7 @@
             "value": "Bearer {{token}}"
           }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/v1/roles?limit=100",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "roles?limit=100"
-          ]
-        },
-        "description": ""
+        "url": "{{base_url_auth}}/api/v1/roles?limit=100"
       },
       "event": [
         {
@@ -264,8 +198,8 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('06 · roles (captura ANALYST) responde 200', () => pm.response.to.have.status(200));",
-              "pm.collectionVariables.set('role_id', pm.response.json().items.find(r => r.name === 'ANALYST').id);"
+              "pm.test('06 · roles (captura ANALYST): HTTP 200', () => pm.response.to.have.status(200));",
+              "const b = pm.response.json(); pm.collectionVariables.set('role_id', b.items.find(r => r.name === 'ANALYST').id);"
             ]
           }
         }
@@ -285,18 +219,7 @@
             "value": "Bearer {{token}}"
           }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/v1/users",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "users"
-          ]
-        },
-        "description": "",
+        "url": "{{base_url_auth}}/api/v1/users",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"username\": \"ana.postman\",\n  \"email\": \"ana.postman@espe.edu.ec\",\n  \"password\": \"AnaSegura2026!\"\n}",
@@ -313,8 +236,8 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('07 · crear usuario responde 201', () => pm.response.to.have.status(201));",
-              "pm.collectionVariables.set('user_id', pm.response.json().id);"
+              "pm.test('07 · crear usuario: HTTP 201', () => pm.response.to.have.status(201));",
+              "const b = pm.response.json(); pm.collectionVariables.set('user_id', b.id);"
             ]
           }
         }
@@ -334,18 +257,7 @@
             "value": "Bearer {{token}}"
           }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/v1/user-roles",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "user-roles"
-          ]
-        },
-        "description": "",
+        "url": "{{base_url_auth}}/api/v1/user-roles",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"user_id\": \"{{user_id}}\",\n  \"role_id\": \"{{role_id}}\"\n}",
@@ -362,8 +274,8 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('08 · asignar ANALYST responde 201', () => pm.response.to.have.status(201));",
-              "pm.collectionVariables.set('assignment_id', pm.response.json().id);"
+              "pm.test('08 · asignar ANALYST: HTTP 201', () => pm.response.to.have.status(201));",
+              "const b = pm.response.json(); pm.collectionVariables.set('assignment_id', b.id);"
             ]
           }
         }
@@ -383,18 +295,7 @@
             "value": "Bearer {{token}}"
           }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/v1/user-roles",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "user-roles"
-          ]
-        },
-        "description": "",
+        "url": "{{base_url_auth}}/api/v1/user-roles",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"user_id\": \"{{user_id}}\",\n  \"role_id\": \"{{role_id}}\"\n}",
@@ -411,7 +312,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('09 · asignación duplicada (T06) responde 409', () => pm.response.to.have.status(409));"
+              "pm.test('09 · asignación duplicada (T06): HTTP 409', () => pm.response.to.have.status(409));"
             ]
           }
         }
@@ -427,17 +328,7 @@
             "value": "application/json"
           }
         ],
-        "url": {
-          "raw": "{{base_url}}/internal/service-token",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "internal",
-            "service-token"
-          ]
-        },
-        "description": "",
+        "url": "{{base_url_auth}}/internal/service-token",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"client_id\": \"stego\",\n  \"client_secret\": \"{{service_secret}}\"\n}",
@@ -454,15 +345,15 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('10 · token de servicio responde 200', () => pm.response.to.have.status(200));",
-              "pm.collectionVariables.set('service_token', pm.response.json().access_token);"
+              "pm.test('10 · token de servicio: HTTP 200', () => pm.response.to.have.status(200));",
+              "const b = pm.response.json(); pm.collectionVariables.set('service_token', b.access_token);"
             ]
           }
         }
       ]
     },
     {
-      "name": "11 · análisis (STEGO)",
+      "name": "11 · análisis de una imagen limpia",
       "request": {
         "method": "POST",
         "header": [
@@ -471,19 +362,17 @@
             "value": "Bearer {{token}}"
           }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/v1/steganography/analyze",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "steganography",
-            "analyze"
+        "url": "{{base_url_stego}}/api/v1/steganography/analyze",
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "samples/sample-clean.png"
+            }
           ]
-        },
-        "description": "multipart/form-data con el campo file; adjuntar samples/sample-clean.png"
+        }
       },
       "event": [
         {
@@ -491,14 +380,15 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('11 · análisis (STEGO) responde 201', () => pm.response.to.have.status(201));"
+              "pm.test('11 · análisis de una imagen limpia: HTTP 201', () => pm.response.to.have.status(201));",
+              "const b = pm.response.json(); pm.collectionVariables.set('analysis_id', b.analysis_id);"
             ]
           }
         }
       ]
     },
     {
-      "name": "12 · resultado por id",
+      "name": "12 · leer el resultado",
       "request": {
         "method": "GET",
         "header": [
@@ -507,20 +397,7 @@
             "value": "Bearer {{token}}"
           }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/v1/steganography/results/{{analysis_id}}",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "steganography",
-            "results",
-            "{{analysis_id}}"
-          ]
-        },
-        "description": ""
+        "url": "{{base_url_stego}}/api/v1/steganography/results/{{analysis_id}}"
       },
       "event": [
         {
@@ -528,7 +405,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('12 · resultado por id responde 200', () => pm.response.to.have.status(200));"
+              "pm.test('12 · leer el resultado: HTTP 200', () => pm.response.to.have.status(200));"
             ]
           }
         }
@@ -539,18 +416,7 @@
       "request": {
         "method": "GET",
         "header": [],
-        "url": {
-          "raw": "{{base_url}}/api/v1/users",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "users"
-          ]
-        },
-        "description": ""
+        "url": "{{base_url_auth}}/api/v1/users"
       },
       "event": [
         {
@@ -558,7 +424,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('13 · sin token responde 401', () => pm.response.to.have.status(401));"
+              "pm.test('13 · sin token: HTTP 401', () => pm.response.to.have.status(401));"
             ]
           }
         }
@@ -574,18 +440,7 @@
             "value": "Bearer no.es.un.jwt"
           }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/v1/users",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "users"
-          ]
-        },
-        "description": ""
+        "url": "{{base_url_auth}}/api/v1/users"
       },
       "event": [
         {
@@ -593,14 +448,14 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('14 · token manipulado responde 401', () => pm.response.to.have.status(401));"
+              "pm.test('14 · token manipulado: HTTP 401', () => pm.response.to.have.status(401));"
             ]
           }
         }
       ]
     },
     {
-      "name": "15 · authorización interna",
+      "name": "15 · autorización interna",
       "request": {
         "method": "POST",
         "header": [
@@ -613,18 +468,7 @@
             "value": "Bearer {{service_token}}"
           }
         ],
-        "url": {
-          "raw": "{{base_url}}/internal/authorization/check",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "internal",
-            "authorization",
-            "check"
-          ]
-        },
-        "description": "",
+        "url": "{{base_url_auth}}/internal/authorization/check",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"subject_token\": \"{{token}}\",\n  \"action\": \"steganography.analyze\",\n  \"resource_id\": null\n}",
@@ -641,51 +485,14 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('15 · authorización interna responde 200', () => pm.response.to.have.status(200));"
+              "pm.test('15 · autorización interna: HTTP 200', () => pm.response.to.have.status(200));"
             ]
           }
         }
       ]
     },
     {
-      "name": "16 · AUTH caído (T08)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          },
-          {
-            "key": "Authorization",
-            "value": "Bearer {{service_token}}"
-          }
-        ],
-        "url": {
-          "raw": "{{base_url}}/internal/authorization/check",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "internal",
-            "authorization",
-            "check"
-          ]
-        },
-        "description": "Ejecutar con `docker compose stop auth`: STEGO debe responder 503 AUTHORIZATION_UNAVAILABLE.",
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"subject_token\": \"{{token}}\",\n  \"action\": \"steganography.analyze\",\n  \"resource_id\": null\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "17 · logout",
+      "name": "16 · logout",
       "request": {
         "method": "POST",
         "header": [
@@ -694,19 +501,7 @@
             "value": "Bearer {{token}}"
           }
         ],
-        "url": {
-          "raw": "{{base_url}}/api/v1/auth/logout",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "v1",
-            "auth",
-            "logout"
-          ]
-        },
-        "description": ""
+        "url": "{{base_url_auth}}/api/v1/auth/logout"
       },
       "event": [
         {
@@ -714,7 +509,31 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('17 · logout responde 204', () => pm.response.to.have.status(204));"
+              "pm.test('16 · logout: HTTP 204', () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "17 · token revocado tras logout",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{base_url_auth}}/api/v1/auth/profile"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('17 · token revocado tras logout: HTTP 401', () => pm.response.to.have.status(401));"
             ]
           }
         }
