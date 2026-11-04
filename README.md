@@ -25,7 +25,7 @@ extremo ni restricción de dispositivos.
 | Decisiones de alcance | ✅ [`docs/DECISIONES.md`](docs/DECISIONES.md) |
 | Documentación técnica (entregable aparte) | 📋 Índice y criterios en [`docs/DOCUMENTACION-TECNICA.md`](docs/DOCUMENTACION-TECNICA.md) |
 | Stack y convenciones | ✅ Definidos por el repositorio de referencia (abajo) |
-| Implementación | 🚧 En curso — actividad **01** (esqueleto ejecutable) cerrada; sigue la **02** |
+| Implementación | ✅ AUTH y STEGO implementados — actividades **01–10 y 12** cerradas |
 
 ---
 
@@ -261,8 +261,33 @@ No se versionan: `.env`, `auth/.env`, `stego/.env`, `.secrets/`, `evidence/raw/`
 - [x] Instrucciones de clonar, configurar y levantar (ID 01 · doc 09)
 - [x] Variables de entorno definitivas de cada servicio
 - [x] Comandos de inicialización de la base
-- [ ] Comandos de pruebas
-- [ ] Colección Postman/Insomnia (ID 10 · doc 10)
+- [x] Comandos de pruebas
+- [x] Colección Postman/Insomnia (ID 10 · doc 10)
+
+---
+
+## Pruebas
+
+```bash
+./scripts/gen-samples.py     # muestras reproducibles (solo la primera vez)
+./scripts/run-tests.sh       # levanta el stack, aprovisiona el admin y ejecuta la suite
+```
+
+La suite corre contra los dos servicios por HTTP real y deja la salida en `evidence/`:
+identidad, decisiones de autorización, los once pasos de validación, el detector LSB,
+propiedad de resultados y el envoltorio de error. Incluye el caso de fallo seguro:
+con AUTH detenido, `analyze` responde `503 AUTHORIZATION_UNAVAILABLE` y no se crea
+ninguna fila en `stego.analyses`.
+
+La colección REST está en
+[`docs/coleccion-rest.postman_collection.json`](docs/coleccion-rest.postman_collection.json)
+y se ejecuta con Postman, Insomnia o `newman`.
+
+| Servicio | OpenAPI |
+|---|---|
+| AUTH | `http://localhost:8080/openapi.json` · `/docs` |
+| STEGO | `http://localhost:8081/openapi.json` · `/docs` |
+
 
 ---
 

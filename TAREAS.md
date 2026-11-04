@@ -127,11 +127,11 @@ Cada título indica su posición en el enunciado entre paréntesis.
 ### 03 — STEGO: esqueleto, intake y validación _(doc 05)_
 **Entregable:** proyecto STEGO con `POST /api/v1/steganography/analyze` validando de verdad.
 **Hecho cuando:**
-- [ ] `db/stego/001_init.sql` aplicado.
-- [ ] Tubería de validación de 11 pasos del contrato 6, en orden.
-- [ ] `413` por tamaño, `415` por tipo/firma, `422` por archivo corrupto (T10).
-- [ ] Archivos guardados en cuarentena con nombre aleatorio, sin exposición pública.
-- [ ] Nada se persiste si la validación falla.
+- [x] `db/stego/001_init.sql` aplicado.
+- [x] Tubería de validación de 11 pasos del contrato 6, en orden.
+- [x] `413` por tamaño, `415` por tipo/firma, `422` por archivo corrupto (T10).
+- [x] Archivos guardados en cuarentena con nombre aleatorio, sin exposición pública.
+- [x] Nada se persiste si la validación falla.
 
 ### 04 — AUTH: login, JWT y claves _(doc 02)_
 **Entregable:** `POST /api/v1/auth/login`, `/api/v1/auth/profile`, `/api/v1/auth/logout` y JWKS.
@@ -165,38 +165,38 @@ Cada título indica su posición en el enunciado entre paréntesis.
 ### 07 — Integración STEGO → AUTH _(doc 07)_
 **Entregable:** flujo bearer completo con decisión vigente y fallo seguro.
 **Hecho cuando:**
-- [ ] STEGO verifica el JWT con JWKS y luego pide la decisión a AUTH.
-- [ ] Token de servicio obtenido y renovado a los 240 s.
-- [ ] AUTH caído / timeout / respuesta inválida → `503 AUTHORIZATION_UNAVAILABLE` sin procesar (T08).
-- [ ] STEGO ignora cabeceras y campos de permisos enviados por el cliente.
-- [ ] STEGO no tiene credenciales de la base de AUTH.
+- [x] STEGO verifica el JWT con JWKS y luego pide la decisión a AUTH.
+- [x] Token de servicio obtenido y renovado a los 240 s.
+- [x] AUTH caído / timeout / respuesta inválida → `503 AUTHORIZATION_UNAVAILABLE` sin procesar (T08).
+- [x] STEGO ignora cabeceras y campos de permisos enviados por el cliente.
+- [x] STEGO no tiene credenciales de la base de AUTH.
 
 ### 08 — STEGO: detección LSB y resultados _(doc 06)_
 **Entregable:** analizador real + `GET /api/v1/steganography/results/:id`.
 **Hecho cuando:**
-- [ ] Análisis LSB estadístico implementado con umbral configurable.
-- [ ] Clasificación `sin_indicios` / `sospechosos` / `no_concluyentes` / `error` + `action` según tabla.
-- [ ] Registro con `sha256`, técnica, indicadores, política y `limitations` no vacío.
-- [ ] JSON valida contra `contracts/analysis-result.schema.json`.
-- [ ] Imagen limpia y su versión con carga LSB dan resultados distintos y reales (T09).
-- [ ] Lectura de resultado ajeno → `403 RESULT_FORBIDDEN`; inexistente → `404` (T11).
+- [x] Análisis LSB estadístico implementado con umbral configurable.
+- [x] Clasificación `sin_indicios` / `sospechosos` / `no_concluyentes` / `error` + `action` según tabla.
+- [x] Registro con `sha256`, técnica, indicadores, política y `limitations` no vacío.
+- [x] JSON valida contra `contracts/analysis-result.schema.json`.
+- [x] Imagen limpia y su versión con carga LSB dan resultados distintos y reales (T09).
+- [x] Lectura de resultado ajeno → `403 RESULT_FORBIDDEN`; inexistente → `404` (T11).
 
 ### 09 — Seguridad transversal _(doc 08)_
 **Entregable:** manejo de errores, logging y límites homogéneos en ambos servicios.
 **Hecho cuando:**
-- [ ] Envoltorio de error único con `code`, `message`, `request_id`, `timestamp`.
-- [ ] Logs de auditoría sin contraseñas, claves ni JWT completos (T12).
-- [ ] Rate limiting en login y en analyze.
-- [ ] Validación de entrada en todos los DTO; sin stack traces en respuestas.
-- [ ] `X-Request-Id` validado y propagado de STEGO a AUTH.
+- [x] Envoltorio de error único con `code`, `message`, `request_id`, `timestamp`.
+- [x] Logs de auditoría sin contraseñas, claves ni JWT completos (T12).
+- [x] Rate limiting en login y en analyze.
+- [x] Validación de entrada en todos los DTO; sin stack traces en respuestas.
+- [x] `X-Request-Id` validado y propagado de STEGO a AUTH.
 
 ### 10 — OpenAPI y colección REST _(doc 10)_
 **Entregable:** especificación de ambos servicios + colección Postman/Insomnia.
 **Hecho cuando:**
-- [ ] OpenAPI de AUTH con todos los endpoints, incluido el interno marcado como solo-servicio.
-- [ ] OpenAPI de STEGO con analyze (multipart) y results.
-- [ ] Colección con caminos felices y todos los casos de denegación.
-- [ ] La colección se ejecuta de punta a punta contra el Compose levantado.
+- [x] OpenAPI de AUTH con todos los endpoints, incluido el interno marcado como solo-servicio.
+- [x] OpenAPI de STEGO con analyze (multipart) y results.
+- [x] Colección con caminos felices y todos los casos de denegación.
+- [x] La colección se ejecuta de punta a punta contra el Compose levantado.
 
 ### 11 — Informe técnico y matriz de riesgos _(doc 11)_
 **Entregable:** documento con diagramas, justificaciones y matriz.
@@ -211,12 +211,12 @@ Cada título indica su posición en el enunciado entre paréntesis.
 ### 12 — Pruebas y evidencias _(doc 12)_
 **Entregable:** suite ejecutable + evidencias reproducibles de T01–T12.
 **Hecho cuando:**
-- [ ] Unitarias: hashing, emisión/validación de token, decisión RBAC, analizador LSB.
-- [ ] Funcionales de cada endpoint, incluidos `401/403/413/415`.
-- [ ] Seguridad: token manipulado, vencido, `alg:none`, revocación con JWT vivo, AUTH caído, archivo polyglot.
-- [ ] Integración: usuario con 2 roles, rol en 2 usuarios, login → analyze → results.
-- [ ] Muestras `sample-clean.png`, `sample-lsb.png`, `sample-clean.bmp`, `sample-corrupt.png`, `sample-fake.png`, `sample-huge.png` con script generador versionado.
-- [ ] Evidencias en `evidence/` (salidas y logs depurados, sin secretos).
+- [x] Unitarias: hashing, emisión/validación de token, decisión RBAC, analizador LSB.
+- [x] Funcionales de cada endpoint, incluidos `401/403/413/415`.
+- [x] Seguridad: token manipulado, vencido, `alg:none`, revocación con JWT vivo, AUTH caído, archivo polyglot.
+- [x] Integración: usuario con 2 roles, rol en 2 usuarios, login → analyze → results.
+- [x] Muestras `sample-clean.png`, `sample-lsb.png`, `sample-clean.bmp`, `sample-corrupt.png`, `sample-fake.png`, `sample-huge.png` con script generador versionado.
+- [x] Evidencias en `evidence/` (salidas y logs depurados, sin secretos).
 
 ### 13 — Ensayo y guion de la sustentación _(doc 13)_
 **Entregable:** guion cronometrado y ensayo completo.
