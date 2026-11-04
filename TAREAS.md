@@ -201,12 +201,12 @@ Cada título indica su posición en el enunciado entre paréntesis.
 ### 11 — Informe técnico y matriz de riesgos _(doc 11)_
 **Entregable:** documento con diagramas, justificaciones y matriz.
 **Hecho cuando:**
-- [ ] Diagrama de arquitectura con límites de confianza y flujo AUTH↔STEGO.
-- [ ] Diagrama entidad–relación `users`—`user_roles`—`roles`.
-- [ ] Explicación de JWT, RBAC y verificación de roles vigentes.
-- [ ] Justificación del método LSB, parámetros, formatos y limitaciones.
-- [ ] Justificación de la selección tecnológica: el enunciado no impone lenguaje ni framework, pero exige que la elección se justifique (§2.1).
-- [ ] Matriz activo/amenaza/vulnerabilidad/riesgo/control ligada a Zero Trust, Secure by Design, Shift Left e ISO/IEC 27001 y 27034 (sin alegar certificación).
+- [x] Diagrama de arquitectura con límites de confianza y flujo AUTH↔STEGO.
+- [x] Diagrama entidad–relación `users`—`user_roles`—`roles`.
+- [x] Explicación de JWT, RBAC y verificación de roles vigentes.
+- [x] Justificación del método LSB, parámetros, formatos y limitaciones.
+- [x] Justificación de la selección tecnológica: el enunciado no impone lenguaje ni framework, pero exige que la elección se justifique (§2.1).
+- [x] Matriz activo/amenaza/vulnerabilidad/riesgo/control ligada a Zero Trust, Secure by Design, Shift Left e ISO/IEC 27001 y 27034 (sin alegar certificación).
 
 ### 12 — Pruebas y evidencias _(doc 12)_
 **Entregable:** suite ejecutable + evidencias reproducibles de T01–T12.

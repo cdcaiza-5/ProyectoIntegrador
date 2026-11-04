@@ -1,0 +1,282 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "STEGO",
+        "description": "Servicio de an\u00e1lisis esteganogr\u00e1fico. Valida el archivo, verifica el JWT con JWKS, obtiene una decisi\u00f3n vigente de AUTH y aplica el ataque chi-cuadrado sobre los planos LSB. El resultado es indicativo, nunca concluyente.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/steganography/analyze": {
+            "post": {
+                "tags": [
+                    "steganography"
+                ],
+                "summary": "Analizar una imagen PNG o BMP en busca de sustituci\u00f3n LSB",
+                "operationId": "analyze_api_v1_steganography_analyze_post",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "Imagen PNG (firma 89 50 4E 47 0D 0A 1A 0A) o BMP (firma 42 4D), un \u00fanico archivo por petici\u00f3n, <= STEGO_MAX_UPLOAD_BYTES."
+                                    },
+                                    "note": {
+                                        "type": "string",
+                                        "maxLength": 500,
+                                        "description": "Metadato opcional; no altera el an\u00e1lisis."
+                                    }
+                                },
+                                "type": "object",
+                                "required": [
+                                    "file"
+                                ]
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AnalysisResult"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "TOKEN_MISSING, TOKEN_INVALID, TOKEN_EXPIRED, TOKEN_REVOKED o SUBJECT_INACTIVE"
+                    },
+                    "403": {
+                        "description": "FORBIDDEN o RESULT_FORBIDDEN"
+                    },
+                    "413": {
+                        "description": "PAYLOAD_TOO_LARGE"
+                    },
+                    "415": {
+                        "description": "UNSUPPORTED_MEDIA_TYPE o FILE_SIGNATURE_MISMATCH"
+                    },
+                    "422": {
+                        "description": "VALIDATION_ERROR o IMAGE_UNPROCESSABLE"
+                    },
+                    "503": {
+                        "description": "AUTHORIZATION_UNAVAILABLE"
+                    }
+                }
+            }
+        },
+        "/api/v1/steganography/results/{analysis_id}": {
+            "get": {
+                "tags": [
+                    "steganography"
+                ],
+                "summary": "Consultar un an\u00e1lisis propio (ADMIN puede ver cualquiera)",
+                "operationId": "read_result_api_v1_steganography_results__analysis_id__get",
+                "parameters": [
+                    {
+                        "name": "analysis_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Analysis Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AnalysisResult"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "TOKEN_MISSING, TOKEN_INVALID, TOKEN_EXPIRED, TOKEN_REVOKED o SUBJECT_INACTIVE"
+                    },
+                    "403": {
+                        "description": "FORBIDDEN o RESULT_FORBIDDEN"
+                    },
+                    "404": {
+                        "description": "RESULT_NOT_FOUND"
+                    },
+                    "503": {
+                        "description": "AUTHORIZATION_UNAVAILABLE"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AnalysisResult": {
+                "properties": {
+                    "analysis_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Analysis Id"
+                    },
+                    "user_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "User Id"
+                    },
+                    "filename": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "title": "Filename"
+                    },
+                    "content_type": {
+                        "type": "string",
+                        "enum": [
+                            "image/png",
+                            "image/bmp"
+                        ],
+                        "title": "Content Type"
+                    },
+                    "size_bytes": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0.0,
+                        "title": "Size Bytes"
+                    },
+                    "sha256": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{64}$",
+                        "title": "Sha256"
+                    },
+                    "technique": {
+                        "type": "string",
+                        "const": "lsb_statistical_analysis",
+                        "title": "Technique"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "sin_indicios",
+                            "sospechosos",
+                            "no_concluyentes",
+                            "error"
+                        ],
+                        "title": "Status"
+                    },
+                    "indicators": {
+                        "additionalProperties": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "number"
+                                }
+                            ]
+                        },
+                        "type": "object",
+                        "title": "Indicators"
+                    },
+                    "action": {
+                        "type": "string",
+                        "enum": [
+                            "ninguna",
+                            "advertencia",
+                            "cuarentena",
+                            "rechazo"
+                        ],
+                        "title": "Action"
+                    },
+                    "limitations": {
+                        "type": "string",
+                        "minLength": 1,
+                        "title": "Limitations"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "title": "Created At"
+                    }
+                },
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                    "analysis_id",
+                    "user_id",
+                    "filename",
+                    "content_type",
+                    "size_bytes",
+                    "sha256",
+                    "technique",
+                    "status",
+                    "indicators",
+                    "action",
+                    "limitations",
+                    "created_at"
+                ],
+                "title": "AnalysisResult"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}

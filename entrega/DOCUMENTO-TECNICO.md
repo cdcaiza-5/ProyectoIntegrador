@@ -9,7 +9,7 @@
 | **Trabajo** | Proyecto Integrador del Primer Parcial — *Backend: Autenticación JWT/RBAC y detección de esteganografía* |
 | **Entrega** | Miércoles 4 de noviembre de 2026 |
 | **Integrantes** | ⟨PENDIENTE · nombres completos e NRC del paralelo⟩ |
-| **Repositorio entregado** | ⟨PENDIENTE · URL y etiqueta del commit congelado⟩ |
+| **Repositorio entregado** | https://github.com/cdcaiza-5/ProyectoIntegrador (rama `main`) |
 | **Versión del documento** | 1.0 — 2026-11-04 |
 | **Documento hermano** | `entrega/GUION-SUSTENTACION.md` (guion cronometrado de la defensa) |
 
@@ -72,17 +72,17 @@ están en curso. Para no atribuirnos trabajo no verificado, el estado se declara
 
 | Componente | Artefacto verificable hoy | Estado |
 |---|---|---|
-| Topología Compose, redes, volúmenes, secretos | `docker-compose.yml` | **Presente**. Arranque reproducible: según la lista de verificación del índice de contratos §5 ya se comprobó; esta redacción no lo reejecutó. Evidencia: `⟨PENDIENTE · A12⟩` |
-| DDL de identidad y de análisis | `db/auth/001_init.sql`, `db/stego/001_init.sql`, `db/init/00-databases.sh` | **Presente**, con las restricciones descritas en §2. Aplicación sobre volumen vacío: `⟨PENDIENTE · A12⟩` |
+| Topología Compose, redes, volúmenes, secretos | `docker-compose.yml` | **Presente**. Arranque reproducible: según la lista de verificación del índice de contratos §5 ya se comprobó; esta redacción no lo reejecutó. Evidencia: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| DDL de identidad y de análisis | `db/auth/001_init.sql`, `db/stego/001_init.sql`, `db/init/00-databases.sh` | **Presente**, con las restricciones descritas en §2. Aplicación sobre volumen vacío: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
 | Esquemas de los mensajes entre servicios | `contracts/*.schema.json` | **Presente** |
 | Plantillas de entorno sin secretos | `.env.example`, `auth/.env.example`, `stego/.env.example` | **Presente** |
 | Claves RSA de desarrollo | `scripts/gen-dev-keys.sh` (2048 bits, `.secrets/`) | **Presente** |
-| AUTH: login, JWT, JWKS, CRUD, motor RBAC | `auth/app/` — `security.py`, `rbac.py`, `deps.py`, `errors.py`, `ratelimit.py`, `schemas.py`, `cli.py`, `routers/{auth,users,roles,user_roles,internal}.py` | **Implementado en el repositorio**. Evidencia de ejecución: `⟨PENDIENTE · A12⟩` |
-| STEGO: intake, validación, analizador LSB, resultados | `stego/app/` — `upload.py`, `lsb.py`, `auth_client.py`, `routers/steganography.py`, `schemas.py`, `logging.py`, `request_ids.py` | **Implementado en el repositorio**. Evidencia de ejecución: `⟨PENDIENTE · A12⟩` |
-| Seguridad transversal (envoltorio de error, logs, límites) | `auth/app/errors.py`, `auth/app/ratelimit.py`, `stego/app/errors.py`, `stego/app/logging.py`, `stego/app/request_ids.py` | **Implementado en el repositorio**; logs depurados verificables en T12: `⟨PENDIENTE · A12⟩` |
-| Muestras de imagen (limpia, con carga, corrupta, falsa, enorme) | `samples/` + `stego/scripts/generate_samples.py` | **Presentes**, generadas por script versionado. Mediciones reales: `⟨PENDIENTE · A12⟩` |
-| Suite de pruebas | `tests/conftest.py`, `tests/test_auth.py`, `tests/test_stego.py` | **Presente**. Ejecución y salidas: `⟨PENDIENTE · A12⟩` |
-| Colección de solicitudes REST | `docs/coleccion-rest.postman_collection.json` | **Presente**; recorrido de punta a punta: `⟨PENDIENTE · A10⟩` |
+| AUTH: login, JWT, JWKS, CRUD, motor RBAC | `auth/app/` — `security.py`, `rbac.py`, `deps.py`, `errors.py`, `ratelimit.py`, `schemas.py`, `cli.py`, `routers/{auth,users,roles,user_roles,internal}.py` | **Implementado en el repositorio**. Evidencia de ejecución: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| STEGO: intake, validación, analizador LSB, resultados | `stego/app/` — `upload.py`, `lsb.py`, `auth_client.py`, `routers/steganography.py`, `schemas.py`, `logging.py`, `request_ids.py` | **Implementado en el repositorio**. Evidencia de ejecución: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| Seguridad transversal (envoltorio de error, logs, límites) | `auth/app/errors.py`, `auth/app/ratelimit.py`, `stego/app/errors.py`, `stego/app/logging.py`, `stego/app/request_ids.py` | **Implementado en el repositorio**; logs depurados verificables en T12: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| Muestras de imagen (limpia, con carga, corrupta, falsa, enorme) | `samples/` + `stego/scripts/generate_samples.py` | **Presentes**, generadas por script versionado. Mediciones reales: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| Suite de pruebas | `tests/conftest.py`, `tests/test_auth.py`, `tests/test_stego.py` | **Presente**. Ejecución y salidas: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| Colección de solicitudes REST | `docs/coleccion-rest.postman_collection.json` | **Presente**; recorrido de punta a punta: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
 | OpenAPI exportado de ambos servicios | Procedimiento en §6.4 | **Pendiente · A10** (`/openapi.json` ya se genera en tiempo de ejecución por FastAPI) |
 | Evidencias T01–T12 | Procedimiento en §11 | **Pendiente · A12** |
 
@@ -859,10 +859,10 @@ Requisitos de contenido antes de dar la especificación por buena:
   (`include_in_schema=False`) por ser infraestructura. Si la especificación entregada no lo incluye, debe
   decirse al pie para que no parezca una omisión.
 
-Estado de los dos artefactos: `⟨PENDIENTE · A10⟩` `contracts/openapi-auth.json` y
+Estado de los dos artefactos: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) `contracts/openapi-auth.json` y
 `contracts/openapi-stego.json` (los documentos se generan en `/openapi.json`; lo que falta es exportarlos y
 verificarlos). La colección de solicitudes REST sí existe ya: `docs/coleccion-rest.postman_collection.json`;
-lo pendiente es su recorrido de punta a punta contra el Compose levantado. `⟨PENDIENTE · A10⟩`
+lo pendiente es su recorrido de punta a punta contra el Compose levantado. [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md)
 
 ### 6.5 Envoltorio de error único
 
@@ -985,7 +985,8 @@ canónica y permisos `0640`. Si la validación falla, no se persiste ni el archi
 ### 7.4 Cálculo del indicador
 
 El analizador decodifica la imagen a 8 bits por canal y trabaja sobre los canales de color `R`, `G`, `B`
-(el canal alfa se descarta). Para cada canal `c` y cada pareja `k = 0…127`:
+(el canal alfa se descarta); las imágenes en escala de grises o en paleta aportan un único canal. Para cada
+canal `c` y cada pareja `k = 0…127`:
 
 ```
 n0(k) = nº de muestras del canal con valor 2k        (LSB = 0)
@@ -997,7 +998,7 @@ chi2_c = Σ_k [ (n0(k) - e(k))² / e(k) + (n1(k) - e(k))² / e(k) ]
 
 p_c    = P( Chi²_{255} ≥ chi2_c )                           (cola superior)
 
-tasa_c = fracción del último prefijo de filas con p(prefijo) ≥ 0,5
+tasa   = fracción del último prefijo de filas con p(prefijo) ≥ 0,5
 
 anomaly_score = max { max_c p_c , tasa }
 ```
@@ -1015,7 +1016,7 @@ Detalles que están en el código y que conviene poder señalar:
   `p` menor. Por eso el umbral no es transferible a otra implementación y se calibra sobre esta.
 - **Cálculo del p-valor.** Se hace con la función gamma incompleta regularizada implementada en el propio
   módulo (serie y fracción continuada), sin SciPy. Su corrección numérica debe quedar cubierta por pruebas:
-  `⟨PENDIENTE · A12⟩`.
+  [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md).
 - **Tasa de sustitución estimada.** Se recorre la imagen en 64 bandas horizontales acumulando el
   histograma; tras cada banda con al menos 4096 muestras acumuladas se recalcula `p` y, si supera 0,5, la
   tasa pasa a ser la fracción recorrida. La tasa final es la del último prefijo que cumple la condición.
@@ -1041,7 +1042,7 @@ reproducible: conjunto limpio de al menos 20 imágenes naturales de tipos distin
 de pantalla, degradados sintéticos, ruido), conjunto con carga a proporciones conocidas de la capacidad
 (5 %, 25 %, 50 %, 100 %), cálculo de la curva ROC del indicador y elección del umbral por el criterio de
 Youden, registrando la matriz de confusión. Los valores obtenidos se incorporan como evidencia:
-`⟨PENDIENTE · A12⟩`.
+[`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md).
 
 Una advertencia estadística que hay que tener presente al leer ese `0.75`: si el modelo nulo se cumpliera
 exactamente, el p-valor sería uniforme en `[0,1]` y cualquier umbral `τ` produciría una tasa de falsos
@@ -1057,7 +1058,7 @@ y por eso este documento no presenta ninguna tasa de acierto: sería inventarla.
 
 | `status` | Condición | `action` |
 |---|---|---|
-| `sin_indicios` | `anomaly_score < threshold` y ninguna guarda de §7.5 disparada | `ninguna` |
+| `sin_indicios` | `anomaly_score < threshold` y ninguna de las guardas de abajo disparada | `ninguna` |
 | `sospechosos` | `anomaly_score ≥ threshold` y ninguna guarda disparada | `cuarentena` |
 | `no_concluyentes` | Evidencia insuficiente: imagen demasiado pequeña, paleta reducida, indicadores contradictorios, formato no analizable por la técnica | `advertencia` |
 | `error` | Fallo controlado durante el análisis (archivo que decodifica pero no es procesable) | `rechazo` |
@@ -1108,7 +1109,7 @@ El ejemplo anterior es **forma**, no resultado: los valores numéricos vienen de
 sirven para mostrar los nombres y tipos de los campos. (Que `anomaly_score: 0.82` conviva con
 `chi_square_pvalue: 2.1e-7` es coherente con la definición de §7.4: el primero puede venir de la tasa
 estimada, el segundo del histograma completo.) Los valores reales se obtienen de las muestras y se
-registran en `evidence/`: `⟨PENDIENTE · A12⟩`.
+registran en `evidence/`: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md).
 
 ### 7.6 Limitaciones del método
 
@@ -1155,7 +1156,7 @@ Se declaran porque el enunciado lo exige y porque una defensa que las omita se c
 
 Las muestras existen en `samples/` y las genera `stego/scripts/generate_samples.py`, versionado, sin
 descargas externas (contrato 6 §6). Están presentes las seis de la tabla; lo que falta es la **medición**
-real de cada una y su registro: `⟨PENDIENTE · A12⟩`.
+real de cada una y su registro: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md).
 
 ---
 
@@ -1207,17 +1208,17 @@ como marco no es acreditarse contra ella.
 
 | # | Control | Dónde está especificado | Estado en el repositorio | Evidencia |
 |---|---|---|---|---|
-| C-01 | Contraseñas con **Argon2id** y verificación contra hash ficticio | Contrato 1 §3 | Implementado en `auth/app/security.py`: `PasswordHasher(time_cost=3, memory_cost=65536 KiB, parallelism=4, hash_len=32, salt_len=16)` y `dummy_hash()` cuando el identificador no existe | `⟨PENDIENTE · A12⟩` |
-| C-02 | **RS256 con `kid`**, clave privada solo en AUTH, pública por JWKS | Contrato 1 §§1, 5 | Implementado: emisión en `security.py`, validación con lista cerrada de algoritmos y `kid` obligatorio, `public_jwks()` en `GET /.well-known/jwks.json` | `⟨PENDIENTE · A12⟩` |
-| C-03 | **Token de servicio** RS256 para `/internal/*`, secreto hasheado en base | Contratos 2 §2 y 3 | Implementado: `POST /internal/service-token` con Argon2id sobre `service_clients.secret_hash` y `token_use: service`, `aud: auth-internal` | `⟨PENDIENTE · A12⟩` |
-| C-04 | **Fallo cerrado** de STEGO sin decisión verificable | Contrato 2 §§5–6 | Implementado en `stego/app/auth_client.py`: timeout, cero reintentos, sin caché de decisiones, `503 AUTHORIZATION_UNAVAILABLE` ante cualquier anomalía | `⟨PENDIENTE · A12⟩` |
-| C-05 | **Rate limiting** de login 5/60 s con bloqueo de 60 s | Contratos 1 §3 y 7 §2 | Implementado con `SlidingWindowLimiter` en memoria, por IP + identificador; el endpoint de token de servicio usa otro de 30/60 s | `⟨PENDIENTE · A12⟩` |
-| C-06 | **`X-Request-Id`** validado por expresión regular y propagado | Contrato 7 §5 | Implementado en `auth/app/main.py` (middleware) y `stego/app/request_ids.py`; se devuelve en la respuesta | `⟨PENDIENTE · A12⟩` |
-| C-07 | **Envoltorio de error** sin trazas, con `code` estable y `request_id` | Contrato 7 §5 | Implementado en `auth/app/errors.py` y `stego/app/errors.py`, con el catálogo de 26 códigos y `details` opcional | `⟨PENDIENTE · A12⟩` |
+| C-01 | Contraseñas con **Argon2id** y verificación contra hash ficticio | Contrato 1 §3 | Implementado en `auth/app/security.py`: `PasswordHasher(time_cost=3, memory_cost=65536 KiB, parallelism=4, hash_len=32, salt_len=16)` y `dummy_hash()` cuando el identificador no existe | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| C-02 | **RS256 con `kid`**, clave privada solo en AUTH, pública por JWKS | Contrato 1 §§1, 5 | Implementado: emisión en `security.py`, validación con lista cerrada de algoritmos y `kid` obligatorio, `public_jwks()` en `GET /.well-known/jwks.json` | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| C-03 | **Token de servicio** RS256 para `/internal/*`, secreto hasheado en base | Contratos 2 §2 y 3 | Implementado: `POST /internal/service-token` con Argon2id sobre `service_clients.secret_hash` y `token_use: service`, `aud: auth-internal` | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| C-04 | **Fallo cerrado** de STEGO sin decisión verificable | Contrato 2 §§5–6 | Implementado en `stego/app/auth_client.py`: timeout, cero reintentos, sin caché de decisiones, `503 AUTHORIZATION_UNAVAILABLE` ante cualquier anomalía | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| C-05 | **Rate limiting** de login 5/60 s con bloqueo de 60 s | Contratos 1 §3 y 7 §2 | Implementado con `SlidingWindowLimiter` en memoria: ventana deslizante de 5 intentos por IP + identificador, de modo que al sexto la petición se rechaza hasta que la ventana se vacía; el endpoint de token de servicio usa otra ventana de 30 por 60 s | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| C-06 | **`X-Request-Id`** validado por expresión regular y propagado | Contrato 7 §5 | Implementado en `auth/app/main.py` (middleware) y `stego/app/request_ids.py`; se devuelve en la respuesta | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| C-07 | **Envoltorio de error** sin trazas, con `code` estable y `request_id` | Contrato 7 §5 | Implementado en `auth/app/errors.py` y `stego/app/errors.py`, con el catálogo de 26 códigos y `details` opcional | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
 | C-08 | **Mínimo privilegio en base de datos**: dos bases y dos usuarios sin acceso cruzado | Contrato 7 §1 | `db/init/00-databases.sh` crea roles, bases, revoca `CONNECT` a `PUBLIC` y migra como dueño; `db` sin `ports` en Compose | Verificable con `psql` (§9.7) |
-| C-09 | **Validación de archivos** de tres capas + cuarentena no pública | Contrato 6 §§1–2 | Implementado en `stego/app/upload.py`: extensión, tipo, *magic bytes*, integridad del contenedor, decodificación, dimensiones; cuarentena con UUID y `0640` | `⟨PENDIENTE · A12⟩` |
-| C-10 | **Auditoría sin secretos**: ni contraseñas, ni claves, ni JWT completos | Contratos 2 §7 y 7 §5 | Implementado en `stego/app/logging.py` (formato JSON con redacción de claves sensibles) y en los eventos `analysis_completed`, `result_read`, `result_forbidden` | `⟨PENDIENTE · A12⟩` |
-| C-11 | **Bootstrap sin red, de un solo uso, sin secreto en reposo, auditado** | Contrato 5 §5 | Implementado en `auth/app/cli.py`: guard sobre ADMIN activo, contraseña por `getpass` o `--password-stdin`, auditoría `bootstrap_admin_created` | `⟨PENDIENTE · A12⟩`; desviación en §13.2 (A-h) |
+| C-09 | **Validación de archivos** de tres capas + cuarentena no pública | Contrato 6 §§1–2 | Implementado en `stego/app/upload.py`: extensión, tipo, *magic bytes*, integridad del contenedor, decodificación, dimensiones; cuarentena con UUID y `0640` | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| C-10 | **Auditoría sin secretos**: ni contraseñas, ni claves, ni JWT completos | Contratos 2 §7 y 7 §5 | Implementado en `stego/app/logging.py` (formato JSON con redacción de claves sensibles) y en los eventos `analysis_completed`, `result_read`, `result_forbidden` | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| C-11 | **Bootstrap sin red, de un solo uso, sin secreto en reposo, auditado** | Contrato 5 §5 | Implementado en `auth/app/cli.py`: guard sobre ADMIN activo, contraseña por `getpass` o `--password-stdin`, auditoría `bootstrap_admin_created` | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md); desviación en §13.2 (A-h) |
 | C-12 | **Endurecimiento de contenedores**: usuario no root (uid 10001), sin puerto de base publicado, healthchecks, red interna, secretos montados | Contrato 7 §1 | `Dockerfile` de ambos servicios con `USER appuser`; Compose con `backend_net` interna, `db` sin `ports`, `healthcheck` en los tres servicios, secretos JWT montados | Verificable con `docker compose config` y `docker inspect` |
 
 ### 9.2 Autenticación y contraseñas
@@ -1369,7 +1370,7 @@ análisis, hashes `sha256sum` y logs depurados. Se guardan en `evidence/` con no
 logs crudos con datos sensibles van a `evidence/raw/`, ignorado por git.
 
 Este documento **no** incluye salidas inventadas. Cada fila de la tabla de §11.3 tiene su marcador
-`⟨PENDIENTE · A12⟩` hasta que exista el archivo de evidencia correspondiente. Presentar una captura sin la
+[`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) hasta que exista el archivo de evidencia correspondiente. Presentar una captura sin la
 ejecución demostrable está prohibido por el enunciado y es además detectable en la defensa.
 
 ### 11.2 Las cuatro categorías
@@ -1379,10 +1380,10 @@ que hablan con los servicios levantados, no mocks. Cubren, por nombre:
 
 | Categoría | Qué cubre | Pruebas existentes |
 |---|---|---|
-| **Funcionales de AUTH** | `health` sin datos sensibles, JWKS solo público, login válido e inválido, usuario inexistente indistinguible, perfil con roles activos, creación de usuario y duplicados, decisiones y revocación | `test_health_has_no_sensitive_data`, `test_jwks_exposes_only_the_public_key`, `test_login_returns_a_token_without_roles_inside`, `test_login_with_wrong_password_is_401`, `test_login_with_unknown_user_is_401_without_revealing_existence`, `test_profile_returns_active_roles`, `test_admin_creates_user_and_duplicates_are_rejected`, `test_duplicate_assignment_is_409`, `test_logout_revokes_the_token` |
-| **De seguridad** | Token inválido, token de usuario usado como token de servicio, acción desconocida que deniega sin error, revocación efectiva en la siguiente decisión, cabeceras de permisos del cliente que no sirven para nada, forma del envoltorio de error, `X-Request-Id` devuelto | `test_invalid_tokens_are_rejected`, `test_a_user_token_is_rejected_as_service_token`, `test_unknown_action_is_denied_not_errored`, `test_revocation_takes_effect_on_the_next_decision`, `test_short_analyst_cannot_bypass_with_headers`, `test_error_envelope_shape`, `test_request_id_is_echoed` |
-| **Contractuales del endpoint interno** | Que la decisión tenga **exactamente nueve campos**; que un usuario sin rol no pueda analizar | `test_authorization_decision_has_exactly_nine_fields`, `test_user_without_role_cannot_analyze`, `test_analyst_cannot_list_users` |
-| **Funcionales de STEGO** | `health`, análisis sin token, USER sin permiso, `413` por tamaño, `415` por firma, `422` por imagen corrupta, limpia no marcada, con carga marcada y distinta de la limpia, lectura propia, lectura ajena `403`, inexistente `404` | `test_health`, `test_analyze_without_token_is_401`, `test_user_role_cannot_analyze`, `test_oversized_file_is_413`, `test_signature_mismatch_is_415`, `test_corrupt_image_is_422`, `test_clean_image_is_not_flagged`, `test_lsb_image_is_flagged_and_differs_from_clean`, `test_result_is_readable_by_its_owner`, `test_foreign_result_is_403`, `test_unknown_result_is_404` |
+| **Funcionales de AUTH** | `health` sin datos sensibles, JWKS solo público, login válido e inválido, usuario inexistente indistinguible, perfil con roles activos, creación de usuario y duplicados, asignación duplicada, `logout`, ANALYST sin acceso al CRUD | `test_health_has_no_sensitive_data`, `test_jwks_exposes_only_the_public_key`, `test_login_returns_a_token_without_roles_inside`, `test_login_with_wrong_password_is_401`, `test_login_with_unknown_user_is_401_without_revealing_existence`, `test_profile_returns_active_roles`, `test_admin_creates_user_and_duplicates_are_rejected`, `test_duplicate_assignment_is_409`, `test_logout_revokes_the_token`, `test_analyst_cannot_list_users` |
+| **De seguridad** | Token inválido, token de usuario usado como token de servicio, acción desconocida que deniega sin error, revocación efectiva en la siguiente decisión, cabeceras de permisos del cliente que no sirven para nada, `USER` que no puede analizar, forma del envoltorio de error, `X-Request-Id` devuelto | `test_invalid_tokens_are_rejected`, `test_a_user_token_is_rejected_as_service_token`, `test_unknown_action_is_denied_not_errored`, `test_revocation_takes_effect_on_the_next_decision`, `test_short_analyst_cannot_bypass_with_headers`, `test_user_without_role_cannot_analyze`, `test_error_envelope_shape`, `test_request_id_is_echoed` |
+| **Contractual** | Que la decisión de AUTH tenga **exactamente nueve campos** | `test_authorization_decision_has_exactly_nine_fields` |
+| **Funcionales de STEGO** | `health`, análisis sin token, `USER` sin permiso, `413` por tamaño, `415` por firma, `422` por imagen corrupta, limpia no marcada, con carga marcada y distinta de la limpia, lectura propia, lectura ajena `403`, inexistente `404` | `test_health`, `test_analyze_without_token_is_401`, `test_user_role_cannot_analyze`, `test_oversized_file_is_413`, `test_signature_mismatch_is_415`, `test_corrupt_image_is_422`, `test_clean_image_is_not_flagged`, `test_lsb_image_is_flagged_and_differs_from_clean`, `test_result_is_readable_by_its_owner`, `test_foreign_result_is_403`, `test_unknown_result_is_404` |
 
 Lo que la suite **no** cubre todavía, y por eso no se puede presumir: pruebas unitarias puras del analizador
 LSB con histogramas sintéticos, la verificación del p-valor frente a una implementación de referencia, y el
@@ -1407,7 +1408,7 @@ STEGO_SERVICE_CLIENT_SECRET='<la de stego/.env>' \
 pytest -q tests
 ```
 
-Resultado esperado: 30 pruebas en verde (`30 passed`). La salida real es la evidencia `⟨PENDIENTE · A12⟩`.
+Resultado esperado: 30 pruebas en verde (`30 passed`). La salida real es la evidencia [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md).
 Si alguna falla, se documenta la falla, no se maquilla la salida.
 
 Los tres JSON Schema de `contracts/` se validan contra las respuestas reales. Es la comprobación más barata
@@ -1417,18 +1418,18 @@ y la que más se penaliza cuando falta, porque un contrato que no valida es un c
 
 | ID | Escenario (Anexo D) | Ejecución de referencia | Resultado mínimo esperado | Evidencia |
 |---|---|---|---|---|
-| T01 | Iniciar y detener AUTH y STEGO por separado | `docker compose up -d auth`; `curl :8080/health`; `docker compose stop stego`; `curl :8080/health` de nuevo; `docker compose up -d stego` | Procesos y APIs autónomos; ambos `/health` responden `200` de forma independiente | `⟨PENDIENTE · A12⟩` |
-| T02 | Autenticar con contraseña válida e inválida | `POST /api/v1/auth/login` con credenciales correctas y con contraseña errónea; sexto intento en 60 s | `200` con `access_token` firmado / `401 AUTH_INVALID_CREDENTIALS` / `429 RATE_LIMITED` | `⟨PENDIENTE · A12⟩` |
-| T03 | Consultar STEGO sin JWT, con JWT manipulado o vencido | `POST analyze` sin `Authorization`; con un carácter alterado; con token `exp` en el pasado | `401 TOKEN_MISSING` / `401 TOKEN_INVALID` / `401 TOKEN_EXPIRED` | `⟨PENDIENTE · A12⟩` |
-| T04 | Usuario con rol USER intenta analizar | Login como usuario solo `USER`; `POST analyze` | `403 FORBIDDEN` (`reason: no_active_role_for_action`) | `⟨PENDIENTE · A12⟩` |
-| T05 | Dos roles a un usuario y un rol a dos usuarios | Tres `POST /api/v1/user-roles`; `GET /api/v1/users`; consulta `psql` de §2.5 | Relación N:M persistida e íntegra, visible en las dos direcciones | `⟨PENDIENTE · A12⟩` |
-| T06 | Repetir una asignación usuario–rol | Segundo `POST` idéntico | `409 ASSIGNMENT_EXISTS` y **ninguna** fila nueva | `⟨PENDIENTE · A12⟩` |
-| T07 | Retirar un rol y reutilizar el JWT todavía vigente | `DELETE /api/v1/user-roles/:id`; el mismo `POST analyze` con el mismo token; segunda vía con `PATCH status=inactive` | `403 FORBIDDEN` (`assignment_missing` / `assignment_inactive`) con el token aún no vencido | `⟨PENDIENTE · A12⟩` |
-| T08 | Dejar AUTH temporalmente inaccesible | `docker compose stop auth`; `POST analyze` con token válido; `SELECT count(*) FROM stego.analyses` antes y después | `503 AUTHORIZATION_UNAVAILABLE` y **cero** filas nuevas | `⟨PENDIENTE · A12⟩` |
-| T09 | Analizar imagen original y muestra con carga LSB | `POST analyze` con `sample-clean.png` y con `sample-lsb.png`; `sha256sum` de ambas | Clasificaciones distintas y reales (`sin_indicios` vs. `sospechosos`), con `indicators` y `action` según §7.5 | `⟨PENDIENTE · A12⟩` |
-| T10 | Subir archivo inválido, corrupto o demasiado grande | `sample-fake.png`, `sample-corrupt.png`, `sample-huge.png` | `415 FILE_SIGNATURE_MISMATCH` / `422 IMAGE_UNPROCESSABLE` / `413 PAYLOAD_TOO_LARGE`; sin fila en `stego.analyses` | `⟨PENDIENTE · A12⟩` |
-| T11 | Consultar un análisis ajeno sin autorización | `GET results/:id` con el token de otro usuario y con un id inexistente | `403 RESULT_FORBIDDEN` / `404 RESULT_NOT_FOUND` | `⟨PENDIENTE · A12⟩` |
-| T12 | Revisar bitácoras de accesos y análisis | `docker compose logs auth stego`; búsqueda de `password`, `Bearer `, `secret`; comprobación de `X-Request-Id` | Trazabilidad completa sin secretos ni JWT completos | `⟨PENDIENTE · A12⟩` |
+| T01 | Iniciar y detener AUTH y STEGO por separado | `docker compose up -d auth`; `curl :8080/health`; `docker compose stop stego`; `curl :8080/health` de nuevo; `docker compose up -d stego` | Procesos y APIs autónomos; ambos `/health` responden `200` de forma independiente | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| T02 | Autenticar con contraseña válida e inválida | `POST /api/v1/auth/login` con credenciales correctas y con contraseña errónea; sexto intento en 60 s | `200` con `access_token` firmado / `401 AUTH_INVALID_CREDENTIALS` / `429 RATE_LIMITED` | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| T03 | Consultar STEGO sin JWT, con JWT manipulado o vencido | `POST analyze` sin `Authorization`; con un carácter alterado; con token `exp` en el pasado | `401 TOKEN_MISSING` / `401 TOKEN_INVALID` / `401 TOKEN_EXPIRED` | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| T04 | Usuario con rol USER intenta analizar | Login como usuario solo `USER`; `POST analyze` | `403 FORBIDDEN` (`reason: no_active_role_for_action`) | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| T05 | Dos roles a un usuario y un rol a dos usuarios | Tres `POST /api/v1/user-roles`; `GET /api/v1/users`; consulta `psql` de §2.5 | Relación N:M persistida e íntegra, visible en las dos direcciones | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| T06 | Repetir una asignación usuario–rol | Segundo `POST` idéntico | `409 ASSIGNMENT_EXISTS` y **ninguna** fila nueva | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| T07 | Retirar un rol y reutilizar el JWT todavía vigente | `DELETE /api/v1/user-roles/:id`; el mismo `POST analyze` con el mismo token; segunda vía con `PATCH status=inactive` | `403 FORBIDDEN` (`assignment_missing` / `assignment_inactive`) con el token aún no vencido | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| T08 | Dejar AUTH temporalmente inaccesible | `docker compose stop auth`; `POST analyze` con token válido; `SELECT count(*) FROM stego.analyses` antes y después | `503 AUTHORIZATION_UNAVAILABLE` y **cero** filas nuevas | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| T09 | Analizar imagen original y muestra con carga LSB | `POST analyze` con `sample-clean.png` y con `sample-lsb.png`; `sha256sum` de ambas | Clasificaciones distintas y reales (`sin_indicios` vs. `sospechosos`), con `indicators` y `action` según §7.5 | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| T10 | Subir archivo inválido, corrupto o demasiado grande | `sample-fake.png`, `sample-corrupt.png`, `sample-huge.png` | `415 FILE_SIGNATURE_MISMATCH` / `422 IMAGE_UNPROCESSABLE` / `413 PAYLOAD_TOO_LARGE`; sin fila en `stego.analyses` | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| T11 | Consultar un análisis ajeno sin autorización | `GET results/:id` con el token de otro usuario y con un id inexistente | `403 RESULT_FORBIDDEN` / `404 RESULT_NOT_FOUND` | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| T12 | Revisar bitácoras de accesos y análisis | `docker compose logs auth stego`; búsqueda de `password`, `Bearer `, `secret`; comprobación de `X-Request-Id` | Trazabilidad completa sin secretos ni JWT completos | [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
 
 ### 11.4 Qué se espera ver en cada evidencia
 
@@ -1501,7 +1502,7 @@ docker compose exec auth python -m app.cli bootstrap-admin \
 (no existe `--password`) y admite `--password-stdin` solo para automatizar. Si ya hay un ADMIN activo, el
 comando termina sin crear nada e imprime «ya existe un ADMIN activo». Detalle en §13.2 (A-h).
 
-Estado: implementado; evidencia de ejecución `⟨PENDIENTE · A12⟩`.
+Estado: implementado; evidencia de ejecución [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md).
 
 ### 12.5 Recorrido funcional de referencia
 
@@ -1545,6 +1546,23 @@ El recorrido completo, cronometrado y con planes B, está en `entrega/GUION-SUST
 | Puerto 8080 ocupado | Otro proceso en el host | `docker compose down` y revisar `ss -ltnp` |
 | `403` inesperado | Asignación retirada o rol inactivo | `GET /api/v1/auth/profile`, consulta de §2.5 y revisar `reason` en el log |
 
+### 12.7 Checklist de cierre (antes de entregar)
+
+Se recorre la última hora; ninguna casilla se marca sin haber visto la salida.
+
+- [ ] `docker compose down -v && docker compose up -d --build` funciona desde cero con solo las tres
+      plantillas de entorno y `./scripts/gen-dev-keys.sh`.
+- [ ] `auth/.env.example`, `stego/.env.example` y `.env.example` cubren **todas** las variables que el
+      servicio lee, incluidas las opcionales de STEGO (`STEGO_MIN_ANALYSIS_PIXELS`,
+      `STEGO_MIN_PALETTE_COLORS`, `STEGO_JWT_*`, `STEGO_JWKS_CACHE_SECONDS`,
+      `STEGO_SERVICE_TOKEN_MIN_REMAINING_SECONDS`).
+- [ ] `pytest -q tests` ejecutado y su salida guardada en `evidence/`.
+- [ ] `contracts/openapi-auth.json` y `contracts/openapi-stego.json` exportados y revisados contra §6.4.
+- [ ] Las evidencias de T01–T12 existen en `evidence/` con comando y salida.
+- [ ] Ningún archivo de `evidence/` contiene contraseñas, claves ni JWT completos.
+- [ ] Este documento y el guion están actualizados con lo que realmente responde el sistema, incluidas las
+      limitaciones de §13.1.
+
 ---
 
 ## 13. Limitaciones conocidas y desviaciones
@@ -1584,7 +1602,7 @@ Se documentan en lugar de resolverse en silencio, como exige la regla de cambio 
 | A-g | El enunciado pide `413` y `415` para cargas; el contrato 6 añade `422 IMAGE_UNPROCESSABLE` | Se implementan los tres: `413` por tamaño o dimensiones, `415` por tipo o firma, `422` por archivo que no decodifica |
 | A-h | El contrato 5 §5 dice que el bootstrap «solicita `username` y `password` por terminal»; la CLI recibe `username` y `email` como argumentos | Se mantiene: el usuario y el correo no son secretos, y pasarlos por `argv` evita un diálogo más. La contraseña sí se pide por terminal o por `--password-stdin`. La propiedad que importa —ningún secreto en `argv`, `.env` ni logs— se conserva |
 | A-i | El contrato 6 §1 describe `note` como metadato «que se guarda»; `stego.analyses` no tiene columna para texto libre | Se valida (≤ 500 caracteres, `422` si excede) y se descarta. Guardarlo exigiría versionar el contrato 6 §5 y añadir columna; se documenta en lugar de improvisar el esquema |
-| A-j | `STEGO_MIN_ANALYSIS_PIXELS` (16 384) y `STEGO_MIN_PALETTE_COLORS` (16) no figuran en el contrato 7 §3 | Son parámetros propios del analizador, con valor por defecto y documentados en la plantilla de STEGO. No alteran rutas, códigos ni esquemas. Si el equipo prefiere congelarlos, se añaden al contrato 7 en la siguiente versión |
+| A-j | `STEGO_MIN_ANALYSIS_PIXELS` (16 384) y `STEGO_MIN_PALETTE_COLORS` (16) no figuran en el contrato 7 §3 | Son parámetros propios del analizador, con valor por defecto; no alteran rutas, códigos ni esquemas. Deben figurar en `stego/.env.example` para que la plantilla cubra todas las variables (comprobación de §12.7). Si el equipo prefiere congelarlos, se añaden al contrato 7 en la siguiente versión |
 | A-k | STEGO usa `STEGO_JWT_ISSUER`, `STEGO_JWT_AUDIENCE`, `STEGO_JWT_LEEWAY_SECONDS`, `STEGO_JWKS_CACHE_SECONDS` y `STEGO_SERVICE_TOKEN_MIN_REMAINING_SECONDS`, que el contrato 7 §3 no nombra | Se derivan de valores que sí están congelados (emisor `auth-service`, audiencia `stego-api`, desfase 60 s, TTL de servicio 300 s con renovación a 240 s, timeout de JWKS 1500 ms). Se documentan como variables de implementación con el mismo valor que el contrato |
 | A-l | Los grados de libertad del estadístico son 255 por convención de la implementación de referencia, no por derivación (127–128 sería lo esperable en el contraste por parejas) | Se documenta el efecto: cambia la escala del p-valor, no su monotonicidad; el umbral se calibra sobre esta implementación y no es transferible a otra (§7.4, S-8) |
 
@@ -1631,11 +1649,11 @@ Se documentan en lugar de resolverse en silencio, como exige la regla de cambio 
 | Diagrama entidad–relación de la asociación N:M `users`—`user_roles`—`roles` | §2.1, §2.2, §2.4 |
 | Explicación de la autenticación JWT, la autorización RBAC y la estrategia de roles vigentes | §3 (JWT) y §4 (RBAC) |
 | Matriz de roles y permisos | §5.2 (13 acciones × 3 roles) |
-| Especificaciones OpenAPI de ambos servicios | §6.1, §6.2, §6.4 (con artefactos `⟨PENDIENTE · A10⟩`) |
+| Especificaciones OpenAPI de ambos servicios | §6.1, §6.2, §6.4 (con artefactos [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md)) |
 | Justificación técnica del método de análisis esteganográfico, formatos y limitaciones | §7.1–§7.7 |
 | Matriz de activos, amenazas, vulnerabilidades, riesgos y controles, vinculada a Zero Trust, Secure by Design, Shift Left, ISO/IEC 27001 y 27034 | §8.2 y §8.3 |
 | Resultados reproducibles de pruebas unitarias, funcionales, de seguridad e integración | §11 (procedimiento y placeholders) |
-| Muestras de imágenes sin modificar y con información oculta | §7.7 (con `⟨PENDIENTE · A12⟩`) |
+| Muestras de imágenes sin modificar y con información oculta | §7.7 (con [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md)) |
 | Registros de auditoría depurados de información sensible | §9.6 y T12 en §11.3 |
 | Guía de ejecución reproducible | §12 |
 
@@ -1660,8 +1678,8 @@ reales**.
 
 | Marcador | Qué debe existir | Actividad |
 |---|---|---|
-| `⟨PENDIENTE · A10⟩` | `contracts/openapi-auth.json` y `contracts/openapi-stego.json` exportados desde los servicios y verificados contra el comportamiento; recorrido completo de `docs/coleccion-rest.postman_collection.json` | 10 |
-| `⟨PENDIENTE · A12⟩` | Salida de `pytest -q tests` con las 30 pruebas; evidencias de T01–T12 (comando y salida); medición de `sample-clean.*` frente a `sample-lsb.png` con sus indicadores reales; curva ROC y matriz de confusión de la calibración del umbral; logs depurados de T12 | 12 |
+| [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) | `contracts/openapi-auth.json` y `contracts/openapi-stego.json` exportados desde los servicios y verificados contra el comportamiento; recorrido completo de `docs/coleccion-rest.postman_collection.json` | 10 |
+| [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) | Salida de `pytest -q tests` con las 30 pruebas; evidencias de T01–T12 (comando y salida); medición de `sample-clean.*` frente a `sample-lsb.png` con sus indicadores reales; curva ROC y matriz de confusión de la calibración del umbral; logs depurados de T12 | 12 |
 | `⟨PENDIENTE · A13⟩` | Ensayo cronometrado del guion de sustentación, sin errores, con planes B verificados | 13 |
 
 Los marcadores `⟨PENDIENTE · A02⟩`…`⟨PENDIENTE · A09⟩` que aparecían en la versión anterior de este
