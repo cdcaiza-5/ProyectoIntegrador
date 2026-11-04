@@ -1,6 +1,6 @@
 # T08 — AUTH detenido antes del análisis
-antes: filas en stego.analyses = 26
+antes: filas en stego.analyses = 43
 petición con AUTH caído:
-{"error":{"code":"AUTHORIZATION_UNAVAILABLE","message":"No fue posible obtener una decisión de autorización.","request_id":"fafc69df-a286-47c2-ad71-64926a84f50b","timestamp":"2026-11-04T12:47:54.909428Z"}}
+{"error":{"code":"AUTHORIZATION_UNAVAILABLE","message":"No fue posible obtener una decisión de autorización.","request_id":"138af16d-84c6-406d-827e-f9bf6f1012df","timestamp":"2026-11-04T12:52:14.766614Z"}}
 HTTP 503
-después: filas en stego.analyses = 26
+después: filas en stego.analyses = 43
