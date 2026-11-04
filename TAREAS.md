@@ -116,13 +116,13 @@ Cada título indica su posición en el enunciado entre paréntesis.
 ### 02 — AUTH: capa de datos de identidad _(doc 01)_
 **Entregable:** proyecto AUTH con su `Dockerfile`, `.env.example` y migración aplicada.
 **Hecho cuando:**
-- [ ] `db/auth/001_init.sql` corre sin errores en base vacía y es idempotente.
-- [ ] `users`, `roles`, `user_roles` con FK y `UNIQUE(user_id, role_id)`.
-- [ ] `user_roles.status` permite desactivar una asignación sin borrarla.
-- [ ] Roles `ADMIN`, `ANALYST`, `USER` sembrados.
-- [ ] Repositorios de usuarios, roles y asignaciones (sin arreglos en memoria ni constantes).
-- [ ] Asignación duplicada devuelve `409 ASSIGNMENT_EXISTS` y no crea fila (T06).
-- [ ] `python -m app.cli bootstrap-admin` crea el primer ADMIN, es idempotente y no deja la contraseña en `argv`, `.env` ni logs.
+- [x] `db/auth/001_init.sql` corre sin errores en base vacía y es idempotente.
+- [x] `users`, `roles`, `user_roles` con FK y `UNIQUE(user_id, role_id)`.
+- [x] `user_roles.status` permite desactivar una asignación sin borrarla.
+- [x] Roles `ADMIN`, `ANALYST`, `USER` sembrados.
+- [x] Repositorios de usuarios, roles y asignaciones (sin arreglos en memoria ni constantes).
+- [x] Asignación duplicada devuelve `409 ASSIGNMENT_EXISTS` y no crea fila (T06).
+- [x] `python -m app.cli bootstrap-admin` crea el primer ADMIN, es idempotente y no deja la contraseña en `argv`, `.env` ni logs.
 
 ### 03 — STEGO: esqueleto, intake y validación _(doc 05)_
 **Entregable:** proyecto STEGO con `POST /api/v1/steganography/analyze` validando de verdad.
@@ -136,31 +136,31 @@ Cada título indica su posición en el enunciado entre paréntesis.
 ### 04 — AUTH: login, JWT y claves _(doc 02)_
 **Entregable:** `POST /api/v1/auth/login`, `/api/v1/auth/profile`, `/api/v1/auth/logout` y JWKS.
 **Hecho cuando:**
-- [ ] Contraseñas con Argon2id; nunca texto plano.
-- [ ] Login acepta `identifier` (username o correo) y siempre ejecuta la verificación de contraseña, incluso si el usuario no existe.
-- [ ] Par RSA generado; privada solo en AUTH, pública en `/.well-known/jwks.json`.
-- [ ] Token con `iss`, `sub`, `aud`, `iat`, `exp`, `jti`, `token_use`; **sin roles**.
-- [ ] Validación en el orden de 8 pasos del contrato 1.
-- [ ] `logout` responde `204` e inserta el `jti` en `revoked_tokens`.
-- [ ] Credenciales inválidas → `401 AUTH_INVALID_CREDENTIALS`; más de 5 intentos en 60 s → `429`.
+- [x] Contraseñas con Argon2id; nunca texto plano.
+- [x] Login acepta `identifier` (username o correo) y siempre ejecuta la verificación de contraseña, incluso si el usuario no existe.
+- [x] Par RSA generado; privada solo en AUTH, pública en `/.well-known/jwks.json`.
+- [x] Token con `iss`, `sub`, `aud`, `iat`, `exp`, `jti`, `token_use`; **sin roles**.
+- [x] Validación en el orden de 8 pasos del contrato 1.
+- [x] `logout` responde `204` e inserta el `jti` en `revoked_tokens`.
+- [x] Credenciales inválidas → `401 AUTH_INVALID_CREDENTIALS`; más de 5 intentos en 60 s → `429`.
 
 ### 05 — AUTH: CRUD administrativo _(doc 03)_
 **Entregable:** `/api/v1/users`, `/api/v1/roles` y `/api/v1/user-roles` completos, solo ADMIN.
 **Hecho cuando:**
-- [ ] `POST/GET /api/v1/users` y `PATCH /api/v1/users/:id` (incluye activar/desactivar).
-- [ ] `POST/GET /api/v1/roles` y `PATCH /api/v1/roles/:id`.
-- [ ] `POST /api/v1/user-roles`, `PATCH /api/v1/user-roles/:id` (activar/desactivar) y `DELETE /api/v1/user-roles/:id`.
-- [ ] Todo protegido por decisión RBAC contra la BD, no por claim del JWT.
-- [ ] Un `ANALYST` recibe `403` en todos estos endpoints.
+- [x] `POST/GET /api/v1/users` y `PATCH /api/v1/users/:id` (incluye activar/desactivar).
+- [x] `POST/GET /api/v1/roles` y `PATCH /api/v1/roles/:id`.
+- [x] `POST /api/v1/user-roles`, `PATCH /api/v1/user-roles/:id` (activar/desactivar) y `DELETE /api/v1/user-roles/:id`.
+- [x] Todo protegido por decisión RBAC contra la BD, no por claim del JWT.
+- [x] Un `ANALYST` recibe `403` en todos estos endpoints.
 
 ### 06 — AUTH: motor RBAC y endpoint interno _(doc 04)_
 **Entregable:** `POST /internal/authorization/check` y `POST /internal/service-token`.
 **Hecho cuando:**
-- [ ] Respuesta con exactamente los 9 campos del contrato 2.
-- [ ] Relee usuario, asignación y rol en **cada** petición; exige los tres `status` activos.
-- [ ] Catálogo de `reason` completo; acción desconocida → `allowed:false` + `unknown_action`.
-- [ ] Token de servicio obligatorio; token de usuario en `/internal/*` → `401 SERVICE_AUTH_FAILED`.
-- [ ] Retirar **o desactivar** una asignación cambia la decisión en la siguiente petición (T07).
+- [x] Respuesta con exactamente los 9 campos del contrato 2.
+- [x] Relee usuario, asignación y rol en **cada** petición; exige los tres `status` activos.
+- [x] Catálogo de `reason` completo; acción desconocida → `allowed:false` + `unknown_action`.
+- [x] Token de servicio obligatorio; token de usuario en `/internal/*` → `401 SERVICE_AUTH_FAILED`.
+- [x] Retirar **o desactivar** una asignación cambia la decisión en la siguiente petición (T07).
 
 ### 07 — Integración STEGO → AUTH _(doc 07)_
 **Entregable:** flujo bearer completo con decisión vigente y fallo seguro.
