@@ -312,8 +312,17 @@ npx --yes newman run docs/coleccion-sustentacion.postman_collection.json
 npx --yes newman run docs/coleccion-rest.postman_collection.json
 ```
 
-El **paso 7** de la colección de sustentación es el único manual: exige parar AUTH a mitad del
-recorrido (`docker compose stop auth`), así que está documentado en su descripción y no como petición.
+El **paso 0** reinicia el escenario antes de empezar: limpia las variables y desactiva los usuarios
+de demo de la corrida anterior. El **paso 7** es el único manual, porque exige parar AUTH a mitad del
+recorrido (`docker compose stop auth`); está documentado en su descripción, no como petición.
+
+Para dejar la base como recién instalada —solo la cuenta `admin`— hay un reinicio de verdad por SQL,
+porque el contrato no expone `DELETE /api/v1/users` a propósito:
+
+```bash
+./scripts/reset-escenario.sh          # borra todos los usuarios menos admin
+./scripts/reset-escenario.sh --todo   # los borra todos; hay que repetir el bootstrap
+```
 
 | Servicio | OpenAPI |
 |---|---|

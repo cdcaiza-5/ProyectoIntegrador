@@ -40,6 +40,91 @@
   ],
   "item": [
     {
+      "name": "Paso 0 · Reiniciar el escenario",
+      "description": "Deja el escenario limpio antes de empezar, para poder repetir la demostración.\n\nNo borra usuarios: el contrato no expone `DELETE /api/v1/users` a propósito. Los desactiva, que es suficiente porque el login exige `users.status = 'active'` y AUTH vuelve a leerlo en cada decisión.\n\nPara un reinicio de verdad (borrar filas) hay que usar SQL: `./scripts/reset-escenario.sh`.",
+      "item": [
+        {
+          "name": "0.1 · limpiar variables y entrar como ADMIN",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url_auth}}/api/v1/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{admin_identifier}}\",\n  \"password\": \"{{admin_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "['ana_token','beto_token','carla_token','ana_id','beto_id','beto_asg','ana_user','beto_user','carla_user']",
+                  "  .forEach(k => pm.collectionVariables.unset(k));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "const b = pm.response.code === 204 ? {} : pm.response.json();",
+                  "pm.collectionVariables.set('admin_token', b.access_token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "0.2 · desactivar los usuarios de demo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": "{{base_url_auth}}/api/v1/users?limit=100"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const admin = pm.collectionVariables.get('admin_token');",
+                  "const demo = pm.response.json().items.filter(u => /^(ana|beto|carla)\\./.test(u.username) && u.status === 'active');",
+                  "pm.test('usuarios de demo activos encontrados: ' + demo.length, () => pm.expect(true).to.be.true);",
+                  "if (demo.length === 0) { return; }",
+                  "const hecho = () => {};",
+                  "demo.forEach(u => pm.sendRequest({",
+                  "  url: pm.collectionVariables.get('base_url_auth') + '/api/v1/users/' + u.id,",
+                  "  method: 'PATCH',",
+                  "  header: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + admin },",
+                  "  body: { mode: 'raw', raw: JSON.stringify({ status: 'inactive' }) }",
+                  "}, (err, res) => { hecho(); }));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "Paso 1 · Cada servicio responde desde su propia API",
       "description": "Dos procesos, dos imágenes, dos puertos. Ninguno depende del otro para arrancar.",
       "item": [

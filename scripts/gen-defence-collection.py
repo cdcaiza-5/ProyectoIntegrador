@@ -11,7 +11,7 @@ from pathlib import Path
 AUTH = "{{base_url_auth}}"
 STEGO = "{{base_url_stego}}"
 
-def req(name, method, url, *, body=None, form=None, headers=None, tests=None, desc=""):
+def req(name, method, url, *, body=None, form=None, headers=None, tests=None, prerequest=None, desc=""):
     request = {
         "method": method,
         "header": [{"key": k, "value": v} for k, v in (headers or {}).items()],
@@ -26,8 +26,13 @@ def req(name, method, url, *, body=None, form=None, headers=None, tests=None, de
     if desc:
         request["description"] = desc
     item = {"name": name, "request": request}
+    events = []
+    if prerequest:
+        events.append({"listen": "prerequest", "script": {"type": "text/javascript", "exec": prerequest}})
     if tests:
-        item["event"] = [{"listen": "test", "script": {"type": "text/javascript", "exec": tests}}]
+        events.append({"listen": "test", "script": {"type": "text/javascript", "exec": tests}})
+    if events:
+        item["event"] = events
     return item
 
 def bearer(var):
@@ -39,6 +44,45 @@ def expect(status, extra=None):
     return lines + (extra or [])
 
 folders = []
+
+# ---------------------------------------------------------------- Paso 0
+folders.append({
+    "name": "Paso 0 · Reiniciar el escenario",
+    "description": (
+        "Deja el escenario limpio antes de empezar, para poder repetir la demostración.\n\n"
+        "No borra usuarios: el contrato no expone `DELETE /api/v1/users` a propósito. Los desactiva, "
+        "que es suficiente porque el login exige `users.status = 'active'` y AUTH vuelve a leerlo en "
+        "cada decisión.\n\n"
+        "Para un reinicio de verdad (borrar filas) hay que usar SQL: `./scripts/reset-escenario.sh`."
+    ),
+    "item": [
+        req("0.1 · limpiar variables y entrar como ADMIN", "POST", AUTH + "/api/v1/auth/login",
+            body={"identifier": "{{admin_identifier}}", "password": "{{admin_password}}"},
+            headers={"Content-Type": "application/json"},
+            prerequest=[
+                "['ana_token','beto_token','carla_token','ana_id','beto_id','beto_asg','ana_user','beto_user','carla_user']",
+                "  .forEach(k => pm.collectionVariables.unset(k));",
+            ],
+            tests=expect(200, [
+                "pm.collectionVariables.set('admin_token', b.access_token);",
+            ])),
+        req("0.2 · desactivar los usuarios de demo", "GET", AUTH + "/api/v1/users?limit=100",
+            headers=bearer("{{admin_token}}"),
+            tests=[
+                "const admin = pm.collectionVariables.get('admin_token');",
+                "const demo = pm.response.json().items.filter(u => /^(ana|beto|carla)\\./.test(u.username) && u.status === 'active');",
+                "pm.test('usuarios de demo activos encontrados: ' + demo.length, () => pm.expect(true).to.be.true);",
+                "if (demo.length === 0) { return; }",
+                "const hecho = () => {};",
+                "demo.forEach(u => pm.sendRequest({",
+                "  url: pm.collectionVariables.get('base_url_auth') + '/api/v1/users/' + u.id,",
+                "  method: 'PATCH',",
+                "  header: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + admin },",
+                "  body: { mode: 'raw', raw: JSON.stringify({ status: 'inactive' }) }",
+                "}, (err, res) => { hecho(); }));",
+            ]),
+    ],
+})
 
 # ---------------------------------------------------------------- Paso 1
 folders.append({
