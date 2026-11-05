@@ -1,0 +1,31 @@
+{
+  "id": "8f386282-388d-46f1-8744-8d75eab6bbe4",
+  "name": "Backend V1 — local",
+  "values": [
+    {
+      "key": "base_url_auth",
+      "value": "http://localhost:8080",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "base_url_stego",
+      "value": "http://localhost:8081",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "admin_identifier",
+      "value": "admin",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "admin_password",
+      "value": "AdminSegura2026!",
+      "type": "secret",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

@@ -294,9 +294,26 @@ propiedad de resultados y el envoltorio de error. Incluye el caso de fallo segur
 con AUTH detenido, `analyze` responde `503 AUTHORIZATION_UNAVAILABLE` y no se crea
 ninguna fila en `stego.analyses`.
 
-La colección REST está en
-[`docs/coleccion-rest.postman_collection.json`](docs/coleccion-rest.postman_collection.json)
-y se ejecuta con Postman, Insomnia o `newman`.
+### Colecciones para Postman
+
+| Archivo | Para qué |
+|---|---|
+| [`docs/coleccion-sustentacion.postman_collection.json`](docs/coleccion-sustentacion.postman_collection.json) | Los 8 pasos que exige el enunciado, en su orden, con 39 aserciones |
+| [`docs/coleccion-rest.postman_collection.json`](docs/coleccion-rest.postman_collection.json) | Recorrido funcional completo: 17 peticiones |
+| [`docs/postman-environment.json`](docs/postman-environment.json) | Entorno con las dos URLs y las credenciales del admin |
+
+En Postman: **Import** → arrastrar los tres archivos → elegir el entorno «Backend V1 — local» arriba
+a la derecha. Después se corre un folder, o toda la colección con el botón **Run**.
+
+Sin interfaz gráfica, las dos se ejecutan igual:
+
+```bash
+npx --yes newman run docs/coleccion-sustentacion.postman_collection.json
+npx --yes newman run docs/coleccion-rest.postman_collection.json
+```
+
+El **paso 7** de la colección de sustentación es el único manual: exige parar AUTH a mitad del
+recorrido (`docker compose stop auth`), así que está documentado en su descripción y no como petición.
 
 | Servicio | OpenAPI |
 |---|---|
