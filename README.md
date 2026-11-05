@@ -233,8 +233,8 @@ servicio con su base. Puertos, redes y variables son los del
 
 ```
 .
-├── auth/                     # AUTH: Dockerfile, .env.example, app/ (esqueleto de la 01)
-├── stego/                    # STEGO: Dockerfile, .env.example, app/ (esqueleto de la 01)
+├── auth/                     # AUTH: Dockerfile, configuración, CLI, routers y seguridad
+├── stego/                    # STEGO: Dockerfile, intake, LSB, cliente AUTH y routers
 ├── contracts/                # JSON Schema de los contratos entre servicios
 ├── db/
 │   ├── init/00-databases.sh  # roles, bases y migraciones del primer arranque
@@ -243,8 +243,8 @@ servicio con su base. Puertos, redes y variables son los del
 ├── docs/
 │   ├── contratos/            # contratos congelados
 │   └── DECISIONES.md         # alcance y decisiones
-├── evidence/                 # pendiente: salidas de pruebas (actividad 12)
-├── samples/                  # pendiente: imágenes de prueba (actividad 12)
+├── evidence/                 # salidas reproducibles de T01–T12
+├── samples/                  # muestras reproducibles PNG/BMP e inválidas
 ├── scripts/                  # gen-dev-keys.sh · check-env.sh
 ├── .env.example              # secretos de infraestructura para Compose
 ├── docker-compose.yml

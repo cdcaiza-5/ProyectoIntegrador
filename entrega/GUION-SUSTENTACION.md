@@ -5,10 +5,9 @@
 **Duración objetivo:** 13 minutos de demostración + preguntas
 **Documento de referencia:** `entrega/DOCUMENTO-TECNICO.md` (cifras, rutas y códigos citados aquí salen de ahí)
 
-> **Estado de este guion.** Los comandos corresponden a los contratos congelados y a las rutas de
-> `docker-compose.yml`. Varios dependen de actividades que aún no están cerradas (A02, A04, A06, A07, A08).
-> El ensayo completo —y por tanto la evidencia de que el guion corre de punta a punta— es
-> `⟨PENDIENTE · A13⟩`. Este archivo se lee antes de cada ensayo, no la noche anterior.
+> **Estado de este guion.** Los comandos corresponden a los contratos congelados, a la implementación
+> validada y a las rutas de `docker-compose.yml`. El único paso que debe ejecutarse presencialmente antes
+> de la defensa es el ensayo cronometrado A13.
 
 ---
 
@@ -126,14 +125,14 @@ sha256sum samples/sample-clean.png samples/sample-lsb.png samples/sample-clean.b
 
 **Checklist de "listo para empezar":**
 
-- [ ] `docker compose ps` muestra `auth`, `stego` y `db` en `running (healthy)`.
-- [ ] Los dos `/health` responden `200`.
-- [ ] `jwks.json` devuelve al menos un `kid` y ningún campo privado (`d`, `p`, `q`).
-- [ ] El bootstrap terminó y dejó `admin.demo` con rol ADMIN.
-- [ ] Las seis muestras existen y su `sha256` está anotado.
+- [x] `docker compose ps` muestra `auth`, `stego` y `db` en `running (healthy)`.
+- [x] Los dos `/health` responden `200`.
+- [x] `jwks.json` devuelve al menos un `kid` y ningún campo privado (`d`, `p`, `q`).
+- [x] El bootstrap terminó y dejó `admin.demo` con rol ADMIN.
+- [x] Las seis muestras existen y su `sha256` está anotado.
 - [ ] `evidence/` está vacío o con las capturas de ensayo, nunca con resultados que no se vayan a mostrar.
 - [ ] El navegador está cerrado; notificaciones silenciadas.
-- [ ] `⟨PENDIENTE · A13⟩` Ensayo completo ejecutado al menos una vez sin errores.
+- [ ] `⟨CAPTURA · A13⟩` Ensayo completo ejecutado al menos una vez sin errores.
 
 ---
 
@@ -185,7 +184,7 @@ docker compose up -d stego
 - Si algún servicio no está `healthy`: `docker compose logs --tail=50 auth` (o `stego`) y `docker compose up -d --build`.
 - Si el `db` no está sano, el resto no arranca: `docker compose restart db` y esperar el `healthcheck` (10 s de `start_period`).
 - Si el arranque falla por interpolación de Compose, falta `POSTGRES_SUPERUSER_PASSWORD` en `.env`: completarlo y repetir.
-- Si no hay tiempo: saltar el `stop stego` y decir el argumento con el `docker-compose.yml` abierto en T1, señalando los tres servicios y las dos redes. La evidencia de T01 está en `evidence/T01/` `⟨PENDIENTE · A12⟩`.
+- Si no hay tiempo: saltar el `stop stego` y decir el argumento con el `docker-compose.yml` abierto en T1, señalando los tres servicios y las dos redes. La evidencia de T01 está en `evidence/RESULTADOS.md`.
 
 ---
 
@@ -767,7 +766,7 @@ Si el docente recorta el tiempo, se mantiene el orden y se recortan los tiempos,
 | ¿Cumplen ISO 27001? | No. Se usan 27001 y 27034 como referencia de principios y de estructura de controles; no hay auditoría ni declaración de conformidad. |
 | ¿Por qué no mTLS? | Es una mejora documentada (D-007): se priorizó el token de servicio sobre la red interna. mTLS exige CA, certificados y montajes que no cabían en el plazo; queda como trabajo siguiente. |
 | ¿Por qué una sola base de datos? | Una instancia con dos bases y dos usuarios sin acceso cruzado cumple el aislamiento exigido sin levantar dos motores. La separación se verifica desde `psql`. |
-| ¿Dónde está el código del analizador? | En STEGO, módulo de análisis; el diseño y las fórmulas están en la sección 7 del documento técnico. `⟨PENDIENTE · A08⟩` si aún no está cerrado. |
+| ¿Dónde está el código del analizador? | En `stego/app/lsb.py`; el diseño y las fórmulas están en la sección 7 del documento técnico. |
 
 ---
 
@@ -790,7 +789,7 @@ Si el docente recorta el tiempo, se mantiene el orden y se recortan los tiempos,
 | Un servicio queda `unhealthy` | `docker compose logs --tail=50 <svc>`; revisar `check-env.sh` y las claves | «Es un fallo de configuración, no de la demo; lo corrijo en un minuto.» |
 | No hay red en el aula | Todo es local: no se necesita red salvo el `docker build`. Construir las imágenes antes de entrar | — |
 | El proyector no muestra el color de `jq` | `jq -C .` no es necesario; el código HTTP se imprime aparte | — |
-| Un endpoint todavía no implementado (A04–A08 abiertos) | Mostrar el contrato, el JSON Schema y la evidencia de `evidence/` si existe; decir qué falta | «El contrato está congelado y la implementación está en curso; la evidencia disponible es esta.» |
+| Un fallo durante la demo | Mostrar el contrato, el JSON Schema y la evidencia reproducible; ejecutar el plan B de este guion | «La implementación está validada; este es el diagnóstico y el plan B reproducible.» |
 | Se cae la demo entera | Cambiar a la presentación del documento: arquitectura, matriz y limitaciones. La rúbrica también evalúa diseño y documentación | «Paso al diseño, que es lo que puedo demostrar sin entorno.» |
 
 **Regla de oro para los planes B:** nunca inventar una salida. Si algo no funciona, se dice qué se esperaba,

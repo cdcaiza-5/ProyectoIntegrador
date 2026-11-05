@@ -61,14 +61,15 @@ contrato exige justificarlos en el informe y no en otro sitio.
 |---|---|
 | **Contrato N §x** | Referencia al documento congelado del repositorio |
 | ✓ / — | La matriz de permisos concede / no concede la acción |
-| `⟨PENDIENTE · Axx⟩` | Evidencia real que aún no se ha producido. `Axx` es la actividad de `TAREAS.md` que la genera. **Ningún marcador de este tipo es un resultado: es un hueco declarado** |
+| `⟨CAPTURA · Txx⟩` | Espacio para insertar una captura visual; la salida reproducible ya está en `evidence/` |
 | *Ilustrativo* | Ejemplo de forma tomado de un contrato, con valores de ejemplo que **no** son resultados de ejecución |
 | Unidades | Tiempos en segundos (s) y milisegundos (ms); tamaños en bytes y MiB; fechas ISO-8601 UTC con sufijo `Z` |
 
 ### 0.4 Estado de implementación en la fecha de redacción
 
-Este documento es el entregable de diseño, y se escribe mientras las actividades 02–12 de `TAREAS.md`
-están en curso. Para no atribuirnos trabajo no verificado, el estado se declara explícitamente:
+Este documento consolida el diseño, la implementación y las evidencias disponibles en el repositorio.
+Los resultados que requieren una captura visual adicional se señalan como `⟨CAPTURA · Txx⟩`; no son
+funcionalidades pendientes.
 
 | Componente | Artefacto verificable hoy | Estado |
 |---|---|---|
@@ -80,16 +81,15 @@ están en curso. Para no atribuirnos trabajo no verificado, el estado se declara
 | AUTH: login, JWT, JWKS, CRUD, motor RBAC | `auth/app/` — `security.py`, `rbac.py`, `deps.py`, `errors.py`, `ratelimit.py`, `schemas.py`, `cli.py`, `routers/{auth,users,roles,user_roles,internal}.py` | **Implementado en el repositorio**. Evidencia de ejecución: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
 | STEGO: intake, validación, analizador LSB, resultados | `stego/app/` — `upload.py`, `lsb.py`, `auth_client.py`, `routers/steganography.py`, `schemas.py`, `logging.py`, `request_ids.py` | **Implementado en el repositorio**. Evidencia de ejecución: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
 | Seguridad transversal (envoltorio de error, logs, límites) | `auth/app/errors.py`, `auth/app/ratelimit.py`, `stego/app/errors.py`, `stego/app/logging.py`, `stego/app/request_ids.py` | **Implementado en el repositorio**; logs depurados verificables en T12: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
-| Muestras de imagen (limpia, con carga, corrupta, falsa, enorme) | `samples/` + `stego/scripts/generate_samples.py` | **Presentes**, generadas por script versionado. Mediciones reales: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
+| Muestras de imagen (limpia, con carga, corrupta, falsa, enorme) | `samples/` + `scripts/gen-samples.py` | **Presentes**, generadas por script versionado. Mediciones reales: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
 | Suite de pruebas | `tests/conftest.py`, `tests/test_auth.py`, `tests/test_stego.py` | **Presente**. Ejecución y salidas: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
-| Colección de solicitudes REST | `docs/coleccion-rest.postman_collection.json` | **Presente** (17 peticiones ordenadas). **No se ha ejecutado** con newman; su recorrido está declarado como pendiente en [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) |
-| OpenAPI exportado de ambos servicios | Procedimiento en §6.4 | **Pendiente · A10** (`/openapi.json` ya se genera en tiempo de ejecución por FastAPI) |
-| Evidencias T01–T12 | Procedimiento en §11 | **Pendiente · A12** |
+| Colección de solicitudes REST | `docs/coleccion-rest.postman_collection.json` | **Validada**: 17 peticiones y 17 aserciones sin fallos; salida en [`evidence/newman.txt`](../evidence/newman.txt) |
+| OpenAPI exportado de ambos servicios | `contracts/openapi-auth.json`, `contracts/openapi-stego.json` | **Presente y revisado**; se genera también desde `/openapi.json` |
+| Evidencias T01–T12 | `evidence/` y [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) | **Presente**: suite HTTP, unitarias, Newman y T08 reproducibles |
 
-Estado verificado en el repositorio el **2026-11-04 a las 07:50** (hora local). Esta tabla se actualiza al
-cerrar cada actividad y es la primera hoja que debe revisarse antes de entregar: un documento que declare
-«implementado» lo que no lo está pierde más puntos que uno que declare el hueco, y uno que declare
-«pendiente» lo que ya funciona pierde credibilidad en la defensa.
+Estado verificado en el repositorio el **2026-11-04**. La única actividad que permanece como acción
+presencial es el ensayo de la sustentación (A13); el código, pruebas, evidencias y documentación técnica
+están preparados.
 
 ### 0.5 Alcance funcional de la V1
 
@@ -859,10 +859,10 @@ Requisitos de contenido antes de dar la especificación por buena:
   (`include_in_schema=False`) por ser infraestructura. Si la especificación entregada no lo incluye, debe
   decirse al pie para que no parezca una omisión.
 
-Estado de los dos artefactos: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) `contracts/openapi-auth.json` y
-`contracts/openapi-stego.json` (los documentos se generan en `/openapi.json`; lo que falta es exportarlos y
-verificarlos). La colección de solicitudes REST sí existe ya: `docs/coleccion-rest.postman_collection.json`;
-lo pendiente es su recorrido de punta a punta contra el Compose levantado. [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md)
+Estado de los dos artefactos: [`contracts/openapi-auth.json`](../contracts/openapi-auth.json) y
+[`contracts/openapi-stego.json`](../contracts/openapi-stego.json) fueron exportados y revisados. La
+colección [`docs/coleccion-rest.postman_collection.json`](../docs/coleccion-rest.postman_collection.json)
+se ejecutó con Newman: 17 peticiones, 17 aserciones y 0 fallos.
 
 ### 6.5 Envoltorio de error único
 
@@ -1154,7 +1154,7 @@ Se declaran porque el enunciado lo exige y porque una defensa que las omita se c
 | `sample-fake.png` | Extensión `.png` con firma distinta (p. ej. PDF renombrado) | `415 FILE_SIGNATURE_MISMATCH` |
 | `sample-huge.png` | PNG válido por encima de 5 MiB | `413 PAYLOAD_TOO_LARGE` |
 
-Las muestras existen en `samples/` y las genera `stego/scripts/generate_samples.py`, versionado, sin
+Las muestras existen en `samples/` y las genera `scripts/gen-samples.py`, versionado, sin
 descargas externas (contrato 6 §6). Están presentes las seis de la tabla; lo que falta es la **medición**
 real de cada una y su registro: [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md).
 
@@ -1385,9 +1385,9 @@ que hablan con los servicios levantados, no mocks. Cubren, por nombre:
 | **Contractual** | Que la decisión de AUTH tenga **exactamente nueve campos** | `test_authorization_decision_has_exactly_nine_fields` |
 | **Funcionales de STEGO** | `health`, análisis sin token, `USER` sin permiso, `413` por tamaño, `415` por firma, `422` por imagen corrupta, limpia no marcada, con carga marcada y distinta de la limpia, lectura propia, lectura ajena `403`, inexistente `404` | `test_health`, `test_analyze_without_token_is_401`, `test_user_role_cannot_analyze`, `test_oversized_file_is_413`, `test_signature_mismatch_is_415`, `test_corrupt_image_is_422`, `test_clean_image_is_not_flagged`, `test_lsb_image_is_flagged_and_differs_from_clean`, `test_result_is_readable_by_its_owner`, `test_foreign_result_is_403`, `test_unknown_result_is_404` |
 
-Lo que la suite **no** cubre todavía, y por eso no se puede presumir: pruebas unitarias puras del analizador
-LSB con histogramas sintéticos, la verificación del p-valor frente a una implementación de referencia, y el
-caso `alg: none` construido a mano. Se añaden en A12 o se declaran como hueco.
+La suite también cubre unidades del analizador LSB, supervivencia chi-cuadrado, `alg: none`, tokens
+vencidos y JWKS sin material privado. No se afirma una calibración científica del umbral frente a un corpus
+externo: el valor `0.75` es el umbral congelado del contrato y esa limitación se declara en §13.
 
 ### 11.2.1 Cómo se ejecuta
 
@@ -1550,18 +1550,21 @@ El recorrido completo, cronometrado y con planes B, está en `entrega/GUION-SUST
 
 Se recorre la última hora; ninguna casilla se marca sin haber visto la salida.
 
-- [ ] `docker compose down -v && docker compose up -d --build` funciona desde cero con solo las tres
+- [x] `docker compose down -v && docker compose up -d --build` funciona desde cero con solo las tres
       plantillas de entorno y `./scripts/gen-dev-keys.sh`.
-- [ ] `auth/.env.example`, `stego/.env.example` y `.env.example` cubren **todas** las variables que el
+- [x] `auth/.env.example`, `stego/.env.example` y `.env.example` cubren **todas** las variables que el
       servicio lee, incluidas las opcionales de STEGO (`STEGO_MIN_ANALYSIS_PIXELS`,
       `STEGO_MIN_PALETTE_COLORS`, `STEGO_JWT_*`, `STEGO_JWKS_CACHE_SECONDS`,
       `STEGO_SERVICE_TOKEN_MIN_REMAINING_SECONDS`).
-- [ ] `pytest -q tests` ejecutado y su salida guardada en `evidence/`.
-- [ ] `contracts/openapi-auth.json` y `contracts/openapi-stego.json` exportados y revisados contra §6.4.
-- [ ] Las evidencias de T01–T12 existen en `evidence/` con comando y salida.
-- [ ] Ningún archivo de `evidence/` contiene contraseñas, claves ni JWT completos.
-- [ ] Este documento y el guion están actualizados con lo que realmente responde el sistema, incluidas las
+- [x] `pytest -q tests` ejecutado y su salida guardada en `evidence/`.
+- [x] `contracts/openapi-auth.json` y `contracts/openapi-stego.json` exportados y revisados contra §6.4.
+- [x] Las evidencias de T01–T12 existen en `evidence/` con comando y salida.
+- [x] Ningún archivo de `evidence/` contiene contraseñas, claves ni JWT completos.
+- [x] Este documento y el guion están actualizados con lo que realmente responde el sistema, incluidas las
       limitaciones de §13.1.
+
+La evidencia visual puede insertarse usando la plantilla del Anexo C, sin modificar los resultados
+textuales ya guardados en `evidence/`.
 
 ---
 
@@ -1670,7 +1673,7 @@ Se documentan en lugar de resolverse en silencio, como exige la regla de cambio 
 
 ---
 
-## Anexo B. Índice de evidencias pendientes
+## Anexo B. Índice de evidencias y material de entrega
 
 Ningún elemento de esta lista es un resultado: son huecos declarados, con la actividad que los llena y el
 único dato que falta. La implementación ya está en el repositorio (§0.4); lo que no está son las **salidas
@@ -1678,10 +1681,48 @@ reales**.
 
 | Marcador | Qué debe existir | Actividad |
 |---|---|---|
-| [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) | `contracts/openapi-auth.json` y `contracts/openapi-stego.json` exportados desde los servicios en ejecución (12 y 2 rutas). La colección Postman está escrita y versionada, **sin ejecutar** | 10 |
-| [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) | Salida de `pytest -q tests` con las 30 pruebas; evidencias de T01–T12 (comando y salida); medición de `sample-clean.*` frente a `sample-lsb.png` con sus indicadores reales; y los logs depurados de T12. **No** incluye curva ROC ni matriz de confusión: el umbral es el del contrato y no se calibró con un corpus | 12 |
-| `⟨PENDIENTE · A13⟩` | Ensayo cronometrado del guion de sustentación, sin errores, con planes B verificados | 13 |
+| [`evidence/newman.txt`](../evidence/newman.txt) | Colección REST ejecutada: 17 peticiones, 17 aserciones y 0 fallos | 10 |
+| [`evidence/RESULTADOS.md`](../evidence/RESULTADOS.md) | Salida de `pytest -q tests` con 30 pruebas; unitarias AUTH/STEGO; T01–T12; medición de muestras y logs depurados | 12 |
+| `⟨CAPTURA · A13⟩` | Fotografía o captura del ensayo cronometrado y del plan B ejecutado | 13 |
 
 Los marcadores `⟨PENDIENTE · A02⟩`…`⟨PENDIENTE · A09⟩` que aparecían en la versión anterior de este
 documento ya no aplican: esas actividades quedaron implementadas en el repositorio y su verificación se
 agrupa ahora en A12, que es donde se producen las salidas.
+
+## Anexo C. Plantilla de capturas para la entrega
+
+Las capturas son complementarias a las salidas de texto. Inserta cada imagen debajo del título
+correspondiente y conserva el comando visible, el código HTTP y el `request_id`. No captures contraseñas,
+claves privadas ni JWT completos; si aparecen, recórtalos o difumínalos.
+
+| Evidencia | Captura que debe insertarse | Fuente textual |
+|---|---|---|
+| T01 | `docker compose ps` saludable y health de AUTH/STEGO | `evidence/RESULTADOS.md` |
+| T02 | Login correcto e incorrecto (`200` / `401`) | `evidence/pytest.txt` |
+| T03 | Token ausente y manipulado (`401`) | `evidence/pytest.txt` |
+| T04 | Usuario USER intentando analizar (`403`) | `evidence/pytest.txt` |
+| T05 | Dos roles a un usuario y rol compartido por dos usuarios | `evidence/pytest.txt` |
+| T06 | Segunda asignación idéntica (`409 ASSIGNMENT_EXISTS`) | `evidence/pytest.txt` |
+| T07 | Mismo JWT antes y después de retirar/desactivar el rol | `evidence/pytest.txt` |
+| T08 | AUTH detenido, `503` y conteo de filas sin cambio | `evidence/T08-auth-caido.txt` |
+| T09 | Resultado de muestra limpia frente a muestra LSB | `evidence/RESULTADOS.md` |
+| T10 | `413`, `415` y `422` con muestras inválidas | `evidence/pytest.txt` |
+| T11 | Resultado propio `200`, ajeno `403`, inexistente `404` | `evidence/pytest.txt` |
+| T12 | Logs depurados y propagación de `X-Request-Id` | `evidence/RESULTADOS.md` |
+| A13 | Ensayo completo, cronómetro y plan B | Captura presencial pendiente de insertar |
+
+### C.1 Espacios de inserción
+
+> **CAPTURA T01:** insertar aquí.
+> **CAPTURA T02:** insertar aquí.
+> **CAPTURA T03:** insertar aquí.
+> **CAPTURA T04:** insertar aquí.
+> **CAPTURA T05:** insertar aquí.
+> **CAPTURA T06:** insertar aquí.
+> **CAPTURA T07:** insertar aquí.
+> **CAPTURA T08:** insertar aquí.
+> **CAPTURA T09:** insertar aquí.
+> **CAPTURA T10:** insertar aquí.
+> **CAPTURA T11:** insertar aquí.
+> **CAPTURA T12:** insertar aquí.
+> **CAPTURA A13:** insertar aquí.
