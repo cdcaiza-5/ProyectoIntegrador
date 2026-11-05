@@ -122,6 +122,21 @@ def test_clean_image_is_not_flagged(stego: httpx.Client, analyst) -> None:
     assert body["status"] in {"sin_indicios", "no_concluyentes"}
 
 
+def test_bmp_is_supported(stego: httpx.Client, analyst) -> None:
+    response = _analyze(stego, analyst[1], "sample-clean.bmp", "image/bmp")
+    assert response.status_code == 201, response.text
+    body = response.json()
+    assert body["content_type"] == "image/bmp"
+    assert body["technique"] == "lsb_statistical_analysis"
+    assert body["status"] in STATUSES
+
+
+def test_bmp_declared_as_png_is_rejected(stego: httpx.Client, analyst) -> None:
+    response = _analyze(stego, analyst[1], "sample-clean.bmp", "image/png")
+    assert response.status_code == 415
+    assert response.json()["error"]["code"] == "FILE_SIGNATURE_MISMATCH"
+
+
 def test_lsb_image_is_flagged_and_differs_from_clean(stego: httpx.Client, analyst) -> None:
     clean = _analyze(stego, analyst[1], "sample-clean.png").json()
     loaded = _analyze(stego, analyst[1], "sample-lsb.png").json()
