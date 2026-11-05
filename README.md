@@ -194,7 +194,7 @@ subsección de arriba.
 Requisitos: Docker Engine con Compose v2 y `openssl`.
 
 ```bash
-git clone <URL-del-repositorio>
+git clone https://github.com/cdcaiza-5/ProyectoIntegrador
 cd ProyectoIntegrador
 
 # 1. Configuración local: los tres archivos son secretos y no se versionan
@@ -210,7 +210,28 @@ cp stego/.env.example stego/.env
 
 # 4. Levanta los tres servicios
 docker compose up -d --build
+
+# 5. Crea el primer administrador (una sola vez; es idempotente)
+docker compose exec auth python -m app.cli bootstrap-admin \
+    --username admin --email admin@espe.edu.ec
 ```
+
+El paso 5 es obligatorio: las migraciones siembran los roles, pero **no crean ningún usuario**, así
+que sin él no hay con qué iniciar sesión. Pide la contraseña por teclado dos veces y no la deja en
+`argv` ni en los logs. Para guiones o CI existe `--password-stdin`; `--password` no existe a propósito.
+Si ya hay un `ADMIN` activo el comando no hace nada y lo dice.
+
+Con esa cuenta ya puedes pedir un token:
+
+```bash
+curl -s -X POST http://localhost:8080/api/v1/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"identifier":"admin","password":"<la que elegiste>"}'
+```
+
+> **Antes de desplegar fuera de tu equipo, cambia las contraseñas de los tres `.env`.** Las plantillas
+> traen valores que funcionan tal cual para que el arranque sea reproducible, y eso mismo los convierte
+> en credenciales por defecto.
 
 | URL | Qué |
 |---|---|
@@ -235,34 +256,28 @@ servicio con su base. Puertos, redes y variables son los del
 .
 ├── auth/                     # AUTH: Dockerfile, configuración, CLI, routers y seguridad
 ├── stego/                    # STEGO: Dockerfile, intake, LSB, cliente AUTH y routers
-├── contracts/                # JSON Schema de los contratos entre servicios
+├── contracts/                # JSON Schema de los contratos + los dos OpenAPI exportados
 ├── db/
 │   ├── init/00-databases.sh  # roles, bases y migraciones del primer arranque
 │   ├── auth/001_init.sql
 │   └── stego/001_init.sql
 ├── docs/
 │   ├── contratos/            # contratos congelados
-│   └── DECISIONES.md         # alcance y decisiones
+│   ├── coleccion-rest.postman_collection.json
+│   ├── DECISIONES.md         # alcance y decisiones
+│   └── DOCUMENTACION-TECNICA.md
+├── entrega/                  # documento técnico y guion de la sustentación
 ├── evidence/                 # salidas reproducibles de T01–T12
 ├── samples/                  # muestras reproducibles PNG/BMP e inválidas
-├── scripts/                  # gen-dev-keys.sh · check-env.sh
+├── scripts/                  # gen-dev-keys.sh · check-env.sh · gen-samples.py · run-tests.sh
+├── tests/                    # suite funcional, de seguridad, de integración y de unidad
 ├── .env.example              # secretos de infraestructura para Compose
 ├── docker-compose.yml
 ├── TAREAS.md
 └── README.md
 ```
 
-No se versionan: `.env`, `auth/.env`, `stego/.env`, `.secrets/`, `evidence/raw/` ni `samples/generated/`.
-
----
-
-## Pendiente en este README
-
-- [x] Instrucciones de clonar, configurar y levantar (ID 01 · doc 09)
-- [x] Variables de entorno definitivas de cada servicio
-- [x] Comandos de inicialización de la base
-- [x] Comandos de pruebas
-- [x] Colección Postman/Insomnia (ID 10 · doc 10)
+No se versionan: `.env`, `auth/.env`, `stego/.env` ni `.secrets/`.
 
 ---
 
