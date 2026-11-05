@@ -5,7 +5,11 @@ set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-ADMIN_PASSWORD="${TEST_ADMIN_PASSWORD:-AdminSegura2026!}"
+ADMIN_PASSWORD="${TEST_ADMIN_PASSWORD:-}"
+if [ -z "$ADMIN_PASSWORD" ]; then
+    echo "falta TEST_ADMIN_PASSWORD: expórtala con la contraseña que diste a bootstrap-admin" >&2
+    exit 2
+fi
 ADMIN_EMAIL="${TEST_ADMIN_EMAIL:-admin@espe.edu.ec}"
 COMPOSE="${COMPOSE:-docker compose}"
 AUTH_PUBLIC_URL="${AUTH_PUBLIC_URL:-http://localhost:8080}"

@@ -283,7 +283,7 @@ collection = {
         {"key": "base_url_auth", "value": "http://localhost:8080"},
         {"key": "base_url_stego", "value": "http://localhost:8081"},
         {"key": "admin_identifier", "value": "admin"},
-        {"key": "admin_password", "value": "AdminSegura2026!"},
+        {"key": "admin_password", "value": ""},
         {"key": "admin_token", "value": ""},
         {"key": "ana_token", "value": ""},
         {"key": "beto_token", "value": ""},

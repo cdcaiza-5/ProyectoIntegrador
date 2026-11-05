@@ -5,7 +5,8 @@ set -uo pipefail
 
 AUTH=http://localhost:8080
 STEGO=http://localhost:8081
-ADMIN_PASS=AdminSegura2026!
+ADMIN_PASS="${TEST_ADMIN_PASSWORD:-}"
+[ -z "$ADMIN_PASS" ] && { echo "define TEST_ADMIN_PASSWORD"; exit 2; }
 
 b() { printf '\n\033[1m▶ %s\033[0m\n' "$*"; }
 body() { python3 -c 'import sys,json;print(json.dumps(json.load(sys.stdin),ensure_ascii=False)[:200])'; }

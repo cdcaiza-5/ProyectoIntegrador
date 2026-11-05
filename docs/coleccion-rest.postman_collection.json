@@ -19,11 +19,11 @@
     },
     {
       "key": "admin_password",
-      "value": "AdminSegura2026!"
+      "value": ""
     },
     {
       "key": "service_secret",
-      "value": "cambiame-cliente-stego"
+      "value": ""
     },
     {
       "key": "token",

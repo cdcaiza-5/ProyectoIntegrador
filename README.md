@@ -233,6 +233,10 @@ curl -s -X POST http://localhost:8080/api/v1/auth/login \
 > traen valores que funcionan tal cual para que el arranque sea reproducible, y eso mismo los convierte
 > en credenciales por defecto.
 
+La contraseña del administrador **no** está en ningún archivo del repositorio: la eliges en el paso 5 y
+solo existe como hash Argon2id en la base. Guárdala aparte; si la pierdes, `./scripts/reset-escenario.sh --todo`
+y vuelves a empezar.
+
 | URL | Qué |
 |---|---|
 | `http://localhost:8080/health` | AUTH |
@@ -284,9 +288,13 @@ No se versionan: `.env`, `auth/.env`, `stego/.env` ni `.secrets/`.
 ## Pruebas
 
 ```bash
-./scripts/gen-samples.py     # muestras reproducibles (solo la primera vez)
-./scripts/run-tests.sh       # levanta el stack, aprovisiona el admin y ejecuta la suite
+./scripts/gen-samples.py                  # muestras reproducibles (solo la primera vez)
+export TEST_ADMIN_PASSWORD='<la del paso 5>'
+./scripts/run-tests.sh                    # levanta el stack, aprovisiona el admin y ejecuta la suite
 ```
+
+La contraseña del administrador se pasa por entorno, no se versiona. Lo mismo con el secreto del
+cliente de servicio (`STEGO_SERVICE_CLIENT_SECRET`) si corres pytest directamente.
 
 La suite corre contra los dos servicios por HTTP real y deja la salida en `evidence/`:
 identidad, decisiones de autorización, los once pasos de validación, el detector LSB,

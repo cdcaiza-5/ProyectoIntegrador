@@ -7,9 +7,13 @@ import pytest
 AUTH_BASE_URL = os.environ.get("AUTH_BASE_URL", "http://auth:8080")
 STEGO_BASE_URL = os.environ.get("STEGO_BASE_URL", "http://stego:8081")
 ADMIN_IDENTIFIER = os.environ.get("TEST_ADMIN_IDENTIFIER", "admin")
-ADMIN_PASSWORD = os.environ.get("TEST_ADMIN_PASSWORD", "AdminSegura2026!")
+ADMIN_PASSWORD = os.environ.get("TEST_ADMIN_PASSWORD", "")
+if not ADMIN_PASSWORD:
+    raise SystemExit(
+        "define TEST_ADMIN_PASSWORD con la contraseña que usaste en bootstrap-admin"
+    )
 SERVICE_CLIENT_ID = os.environ.get("STEGO_SERVICE_CLIENT_ID", "stego")
-SERVICE_CLIENT_SECRET = os.environ.get("STEGO_SERVICE_CLIENT_SECRET", "cambiame-cliente-stego")
+SERVICE_CLIENT_SECRET = os.environ.get("STEGO_SERVICE_CLIENT_SECRET", "")
 
 
 @pytest.fixture(scope="session")
